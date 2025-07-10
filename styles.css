@@ -2,153 +2,166 @@ body {
     margin: 10px;
     width: calc(100vw - 20px);
     height: calc(100vh - 20px);
-}
 
-.grid {
     display: grid;
-    width: 100%;
-    height: 100%;
     gap: 5px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
+
+    & .modulo {
+        border: 2px solid black;
+
+        & h1 {
+            height: 18px;
+            padding: 5px 0 5px 0;
+            margin: 0px;
+            border-bottom: 2px solid black;
+
+            text-align: center;
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 18px;
+        }
+
+        & .config-com-inputs {
+            /*height: calc(100% - 40px);*/
+            padding: 5px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            column-gap: 10px;
+            row-gap: 5px;
+
+            & .inputs,
+            .labels {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                row-gap: 1px;
+            }
+
+            & .labels {
+                align-items: flex-start;
+            }
+
+            & .inputs {
+                align-items: flex-end;
+
+                & input {
+                    width: 75px;
+                    height: 14px;
+                    font-size: 15px;
+
+                    border: 1px dashed black;
+
+                    &.input-de-lista {
+                        border: 1px solid black;
+                    }
+
+                    &:disabled {
+                        background-color: gray;
+                    }
+                }
+
+                & select {
+                    height: 18px;
+                    font-size: 10px;
+                }
+            }
+        }
+
+        & .config-funcao {
+            display: grid;
+            grid-template-columns: auto;
+            row-gap: 5px;
+            padding: 5px;
+        }
+
+        & .config-controle {
+            display: grid;
+            grid-template-columns: auto auto;
+            row-gap: 5px;
+            padding: 5px;
+        }
+    }
 }
 
-.grid>div {
-    border: 2px solid black;
-    padding: 5px;
-}
 
-.grid .c1-geracoes {
+
+/*DIVS DO GRID AREA*/
+#c-geracoes {
     grid-area: 1 / 1 / 2 / 2;
 }
 
-.grid .c2-mutacao {
-    grid-area: 1 / 3 / 3 / 4;
+#c-visualizacao {
+    grid-area: 2 / 1 / 3 / 2;
 }
 
-.grid .c3-genetica {
+#c-genetica {
     grid-area: 1 / 2 / 3 / 3;
 }
 
-.grid .c4-visualizacao {
-    grid-area: 2 / 1 / 3/ 2;
+#c-mutacao {
+    grid-area: 1 / 3 / 3 / 4;
 }
 
-
-.grid .g-melhor {
-    grid-area: 4 / 1 / 5 / 3;
+#c-controle {
+    grid-area: 1 / 4 / 3 / 5;
 }
 
-.grid .g-margem-de-erro {
+#c-funcao {
+    grid-area: 3 / 1 / 4 / 3;
+}
+
+#g-margem-de-erro {
     grid-area: 3 / 3 / 4 / 5;
 }
 
-.grid .g-funcao {
+#g-melhor {
+    grid-area: 4 / 1 / 5 / 3;
+}
+
+#g-funcao {
     grid-area: 4 / 3 / 5 / 5;
 }
 
 
-.grid .c-funcao {
-    grid-area: 3 / 1 / 4 / 3;
-    display: grid;
-    grid-template-columns: auto;
-    row-gap: 5px;
-    padding: 5px;
-}
 
-.c-funcao h1 {
-    grid-area: 1 / 1 / 2 / 2;
-    margin: 0;
 
-}
 
-.grid .c-controle {
-    grid-area: 1 / 4 / 3 / 5;
-    display: grid;
-    grid-template-columns: auto auto;
-    row-gap: 5px;
-    padding: 5px;
-}
 
-.c-controle h1 {
-    margin: 0;
-    grid-area: 1 / 1 / 2 / 3;
-}
 
-.c-controle div.botoes {
+#c-controle div.botoes {
     grid-area: 3 / 1 / 4 / 3;
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 5px;
 }
 
-.c-controle div.display-coef {
+#c-controle div.display-coef {
     grid-area: 2 / 1 / 3 / 3;
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 5px;
 }
 
-.c-controle input {
+#c-controle input {
     width: calc(100% - 5px);
 }
 
-.c-controle textarea {
+#c-controle textarea {
     grid-column: 1 / 3;
 }
 
 
-.grid .config {
-    display: grid;
-    grid-template-columns: auto auto;
-    column-gap: 10px;
-    row-gap: 5px;
-    padding: 5px;
-}
 
-h1 {
-    text-align: center;
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    height: 18px;
-    line-height: 18px;
-}
 
-.config h1 {
-    margin: 0;
-    grid-area: 1 / 1 / 2 / 3;
-}
 
-.inputs,
-.labels {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 0;
-}
 
-input {
-    width: 75px;
-    height: 12px;
-    font-size: 15px;
-}
 
-input:not(.i-display-coef) {
-    border: 1px dashed black;
 
-}
-
-input.lista {
-    border: 1px solid black;
-}
-
-input:disabled:not(.i-display-coef) {
-    background-color: gray;
-}
-
-select {
-    height: 18px;
-    font-size: 10px;
-}
 
 textarea {
     resize: none;
@@ -160,55 +173,59 @@ p {
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
     height: 18px;
-    position: relative;
+
+    &.p-popup {
+        text-decoration-line: underline;
+        text-decoration-style: dotted;
+        cursor: help;
+
+    }
 }
 
-p:not(.p-display-coef) {
-    text-decoration-line: underline;
-    text-decoration-style: dotted;
-    cursor: help;
 
-}
 
-p span.desc {
+
+
+/*POPUPS E TEXTOS*/
+.p-popup .popup-descricao {
     display: none;
     position: absolute;
     z-index: 1;
+
     background-color: white;
+
     margin: 20px 10px 10px 10px;
     padding: 5px;
     border: 2px solid black;
-    font-size: 12px;
+    border-radius: 5px;
+
     width: min(150%, 400px);
+
+    font-size: 12px;
     color: black;
 }
 
-p:hover:not(.p-display-coef) {
+.p-popup:hover {
     color: blue;
+
+    & .popup-descricao {
+        display: block;
+    }
 }
 
-p:hover>span.desc {
-    display: block;
-}
-
-.tipo {
+/*TEXTOS DOS POPUPS*/
+.texto-item-selecao {
     font-style: bold;
     color: green;
 }
 
-.exemplo {
+.texto-exemplo {
     font-style: italic;
     color: blue;
 }
 
-.aviso {
+.texto-aviso {
     font-style: italic;
     font-weight: bold;
     color: red;
 }
-/*
-.c-controle:hover ~ #grafico-funcao {
-    position:absolute;
-    top: 5px;
-    left: 5px;
-}*/
