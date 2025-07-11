@@ -45,6 +45,7 @@ function catastrofe(tipo, pop) {
             break;
     }
     log(`GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, Catástrofe! ${qtdeRemovidos} foram substituídos.`);
+    adicionarNoArquivo(`Catástrofe! ${qtdeRemovidos} foram substituídos.\n`);
     return populacaoNova;
 }
 //Catastrofe mata n indivíduos
@@ -119,9 +120,12 @@ function selecionarElitismo(populacao) {
     for (let i = 0; i < populacao.length; i++) {
         if (i == I) continue;
         //CRUZAMENTO
+        adicionarNoArquivo(`\n\nCRUZAMENTO DO INDIVÍDUO DE ÍNDICE ${i} COM O MELHOR:\n\t${populacao[i]}\n\tMelhor: ${populacao[I]}\n`);
         populacao[i] = cruzar(0, populacao[i], populacao[I]);
+        adicionarNoArquivo(`APÓS O CRUZAMENTO:\n\t${populacao[i]}\n`);
 
         //MUTAÇÃO
+        adicionarNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO DE ÍNDICE ${i}:\n\t${populacao[i]}\n`);
         populacao[i] = mutar(c._mut, populacao[i]);
     }
     return populacao;
@@ -140,19 +144,24 @@ function selecionarRoleta(populacao) {
         roleta[j] += normalizacao + 1;
     }
     roleta = formatarProb(roleta, populacao.length, true);
+    adicionarNoArquivo(`ROLETA DOS INDIVÍDUOS:\n\t${roleta}\n`);
     //Escolhe os indivíduos
     let genitor1 = randIndex(roleta);
     let genitor2 = randIndex(roleta);
     populacaoNova.push(populacao[genitor1]);
     populacaoNova.push(populacao[genitor2]);
+    adicionarNoArquivo(`GENITORES:\n1) x:${populacao[genitor1]}\n\tf(x):${c.f(populacao[genitor1])}\n2) x:${populacao[genitor2]}\n\tf(x):${c.f(populacao[genitor2])}\n`);
     //Faz eles cruzarem
     while (populacaoNova.length != populacao.length) {
         if (populacaoNova.length > populacao.length) populacaoNova.pop();
         else {
             //CRUZAMENTO
+            adicionarNoArquivo(`\n\nCRUZAMENTO DOS INDIVÍDUOS:\n\t${populacao[genitor1]}\n\t${populacao[genitor2]}\n`);
             let individuo = cruzar(0, populacao[genitor1], populacao[genitor2]);
+            adicionarNoArquivo(`RESULTADO:\n\t${individuo}\n`);
 
             //MUTAÇÃO
+            adicionarNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO:\n\t${individuo}\n\n`);
             individuo = mutar(c._mut, individuo);
             populacaoNova.push(individuo);
         }
@@ -171,15 +180,20 @@ function selecionarTorneio(populacao) {
         a = randEl(populacao);
         b = randEl(populacao);
         let genitor1 = c.f(populacao[a]) > c.f(populacao[b]) ? a : b;
+        adicionarNoArquivo(`TORNEIO 1:\nA: x: ${populacao[a]}\n\tf(x): ${c.f(populacao[a])}\nB: x: ${populacao[b]}\n\tf(x): ${c.f(populacao[b])}\nVENCEDOR:\n\t${populacao[genitor1]}\n`);
         //Sorteia dois para lutarem e ser a mãe
         a = randEl(populacao);
         b = randEl(populacao);
         let genitor2 = c.f(populacao[a]) > c.f(populacao[b]) ? a : b;
+        adicionarNoArquivo(`TORNEIO 2:\nA: x: ${populacao[a]}\n\tf(x): ${c.f(populacao[a])}\nB: x: ${populacao[b]}\n\tf(x): ${c.f(populacao[b])}\nVENCEDOR:\n\t${populacao[genitor2]}\n`);
 
         //CRUZAMENTO
+        adicionarNoArquivo(`\n\nCRUZAMENTO DOS INDIVÍDUOS:\n\t${populacao[genitor1]}\n\t${populacao[genitor2]}\n`);
         populacaoNova[i] = cruzar(0, populacao[genitor1], populacao[genitor2]);
+        adicionarNoArquivo(`RESULTADO (ÍNDICE ${i}):\n\t${populacaoNova[i]}\n`);
 
         //MUTAÇÃO
+        adicionarNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO DE ÍNDICE ${i}:\n\t${populacaoNova[i]}\n\n`);
         populacaoNova[i] = mutar(c._mut, populacaoNova[i]);
     }
     return populacaoNova;
@@ -242,6 +256,7 @@ function alterarIncAtual(resetar) {
 function mutar(tipo, individuo) {
     //Quantos serão mutados
     let qtdeMutados = randIndex(c.listaPNumGene) + 1;
+    adicionarNoArquivo(`Quantidade de genes a serem mutados: ${qtdeMutados}\n`);
     //Quais serão mutados
     let genesParaMutar = [];
     let aux = copiar(c.listaPCadaGene);
@@ -250,6 +265,7 @@ function mutar(tipo, individuo) {
         genesParaMutar.push(gene);
         aux.splice(gene, 1);
     }
+    adicionarNoArquivo(`Quais serão mutados: ${genesParaMutar}\n`);
 
     individuo = copiar(individuo);
     switch (tipo) {
@@ -268,24 +284,39 @@ function mutacao(tipo, individuo, genesParaMutar) {
         switch (tipo) {
             case "_mut_pad":
                 mutacao = sinal * c.mutBase;
+                adicionarNoArquivo(`Mutação: ${sinal}*${c.mutBase} = ${mutacao}\n`);
                 break;
             case "_mut_acu":
                 mutacao = sinal * (c.mutBase + c.incMutBase * c.incAtual);
+                adicionarNoArquivo(`Mutação: ${sinal}*(${c.mutBase}+${c.incMutBase}*${c.incAtual}) = ${mutacao}\n`);
                 break;
             case "_mut_acl":
-                if (c.incMutBase * c.incAtual > c.tetoMut) alterarIncAtual(true);
+                if (c.incMutBase * c.incAtual > c.tetoMut) {
+                    adicionarNoArquivo(`A mutação excedeu o teto! Teto: ${c.tetoMut}, Valor: ${c.incMutBase * c.incAtual}\n`);
+                    alterarIncAtual(true);
+                }
                 mutacao = sinal * (c.mutBase + c.incMutBase * c.incAtual);
+                adicionarNoArquivo(`Mutação: ${sinal}*(${c.mutBase}+${c.incMutBase}*${c.incAtual}) = ${mutacao}\n`);
                 break;
             case "_mut_cao":
                 mutacao = sinal * randNum(c.mutLmin[genesParaMutar[i]], c.mutLmax[genesParaMutar[i]]);
+                adicionarNoArquivo(`Mutação: ${sinal}*${Math.abs(mutacao)} = ${mutacao}\n`);
                 break;
         }
         //Muta o gene
         let gene = individuo[genesParaMutar[i]];
+        adicionarNoArquivo(`Gene antigo: ${gene}.\n`);
         gene += mutacao;
         //Limitação
-        if (c.genesLmin[genesParaMutar[i]] !== null && gene < c.genesLmin[genesParaMutar[i]]) gene = c.genesLmin[genesParaMutar[i]];
-        if (c.genesLmax[genesParaMutar[i]] !== null && gene > c.genesLmax[genesParaMutar[i]]) gene = c.genesLmax[genesParaMutar[i]];
+        if (c.genesLmin[genesParaMutar[i]] !== null && gene < c.genesLmin[genesParaMutar[i]]) {
+            adicionarNoArquivo(`O gene atingiu o limite mínimo.\n`);
+            gene = c.genesLmin[genesParaMutar[i]];
+        }
+        if (c.genesLmax[genesParaMutar[i]] !== null && gene > c.genesLmax[genesParaMutar[i]]) {
+            adicionarNoArquivo(`O gene atingiu o limite máximo.\n`);
+            gene = c.genesLmax[genesParaMutar[i]];
+        }
+        adicionarNoArquivo(`Novo gene: ${gene}.\n`);
         individuo[genesParaMutar[i]] = gene;
     }
     return individuo;

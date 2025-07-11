@@ -1,5 +1,4 @@
-
-//Setar atributos
+//Setar e checagem de atributos
 function setarCampos() {
     //Gerações
     c.nIndv = parseInt(getAtr("$tamanho_da_populacao"));
@@ -53,7 +52,112 @@ function setarCampos() {
     c.incAtual = 0;
     c.geracaoAtual = 0;
     c.index = 0;
+
+    //Logs
+    c.arquivo = "";
 }
+//Verifica se todos os campos foram preenchidos corretamente e retorna true caso sim
+function verificarCampos() {
+
+    function alertarNaN(placeholder, valor) {
+        if (isNaN(valor)) {
+            alert(`O valor '${placeholder}' precisa ser um número!`);
+            return true;
+        } else return false;
+    }
+    function alertarNegativo(placeholder, valor) {
+        if (valor < 0) {
+            alert(`O valor '${placeholder}' precisa ser maior ou igual a zero!`);
+            return true;
+        } else return false;
+    }
+    function alertarMenorQueUm(placeholder, valor) {
+        if (valor < 1) {
+            alert(`O valor '${placeholder}' precisa ser maior ou igual a um!`);
+            return true;
+        } else return false;
+    }
+    function alertarProbabilidade(placeholder, valor) {
+        if (valor < 0 || valor > 1) {
+            alert(`O valor '${placeholder}' precisa ser entre zero e um!`);
+            return true;
+        } else return false;
+    }
+
+    if (alertarNaN("população", c.nIndv)) return false;
+    else if (alertarMenorQueUm("população", c.nIndv)) return false;
+    else if (alertarNaN("escape", c.escape)) return false;
+    else if (alertarNaN("mutação base", c.mutBase)) return false;
+    else if (alertarNegativo("mutação base", c.mutBase)) return false;
+    else if (alertarNaN("probabilidade de mutação positiva", c.pMutPos)) return false;
+    else if (alertarProbabilidade("probabilidade de mutação positiva", c.pMutPos)) return false;
+    else if (alertarNaN("estagnação", c.estag)) return false;
+    else if (alertarMenorQueUm("estagnação", c.estag)) return false;
+    else if (alertarNaN("incremento da mutação base", c.incMutBase)) return false;
+    else if (alertarNegativo("incremento da mutação base", c.incMutBase)) return false;
+    else if (alertarNaN("teto da mutação base", c.tetoMut)) return false;
+    else if (alertarNegativo("teto da mutação base", c.tetoMut)) return false;
+    else if (alertarNaN("número de genes", c.nGenes)) return false;
+    else if (alertarMenorQueUm("número de genes", c.nGenes)) return false;
+    else if (alertarNaN("probabilidade de catástrofe", c.pCat)) return false;
+    else if (alertarProbabilidade("probabilidade de catástrofe", c.pCat)) return false;
+    else if (alertarNaN("número de mortos por catástrofe", c.nMortosCat)) return false;
+    else if (alertarNaN("Tempo de geração", c.delay)) return false;
+    else if (alertarNegativo("Tempo de geração", c.delay)) return false;
+    else if (alertarNaN("resize", c.resize)) return false;
+    else if (alertarMenorQueUm("resize", c.resize)) return false;
+    else if (alertarNaN("número de pontos da função", c.nPtsFuncao)) return false;
+    else if (alertarMenorQueUm("número de pontos da função", c.nPtsFuncao)) return false;
+    else return true;
+}
+//Adiciona os campos no arquivo
+function adicionarCamposNoArquivo() {
+    adicionarNoArquivo(`MODELAGEM E OTIMIZADOR DE FUNÇÕES MATEMÁTICAS COM ALGORITMOS EVOLUTIVOS
+Autor: Gustavo Vidigal Schulgin (gusvidigal)
+--------------------------------------------------
+
+
+FUNÇÃO UTILIZADA (nas variáveis p): {
+${getAtr("funcao")}
+}
+
+PARÂMETROS:
+
+GERAÇÕES
+População: ${c.nIndv};
+Tipo de seleção: ${c._sel};
+Escape: ${c.escape};
+Limite mínimo da geração dos genes: ${c.genesLminGer};
+Limite máximo da geração dos genes: ${c.genesLmaxGer};
+
+MUTAÇÃO
+Mutação base: ${c.mutBase};
+Probabilidade de mutação positiva: ${c.pMutPos};
+Tipo de mutação: ${c._mut};
+Estagnação: ${c.estag};
+Incremento da mutação base: ${c.incMutBase};
+Teto da mutação: ${c.tetoMut};
+Limite mínimo das mutações: ${c.mutLmin};
+Limite máximo das mutações: ${c.mutLmax};
+
+GENÉTICA
+Número de genes: ${c.nGenes};
+Probabilidade de escolha de cada gene: ${c.listaPCadaGene};
+Probabilidade de mutar x genes: ${c.listaPNumGene};
+Probabilidade de catástrofe: ${c.pCat};
+Tipo de catástrofe: ${c._cat};
+Número de mortos pela catástrofe: ${c.nMortosCat};
+Limite mínimo dos genes: ${c.genesLmin};
+Limite máximo dos genes: ${c.genesLmax};
+
+--------------------------------------------------
+`);
+}
+//Adiciona texto no arquivo
+function adicionarNoArquivo(texto) {
+    c.arquivo += texto;
+}
+
 
 
 
@@ -190,7 +294,11 @@ function log(txt) {
 function formatarLista(txt, tamanho, replacer) {
     lista = txt.split(";").map(item => {
         if (item.trim() === "") return replacer;
-        else return parseFloat(item.trim());
+        else {
+            let numero = parseFloat(item.trim());
+            if (!isFinite(numero)) return replacer;
+            else return numero;
+        }
     });
     if (lista.length < tamanho) {
         while (lista.length != tamanho) lista.push(replacer);
@@ -396,3 +504,5 @@ function gAddMelhorAtual(indv) {
         gAtualizar(g_margemDeErro);
     }
 }
+
+

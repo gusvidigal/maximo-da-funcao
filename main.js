@@ -49,6 +49,9 @@ var c = {
     estagAtual: 0,
     incAtual: 0,
     geracaoAtual: 0,
+
+    //Logs
+    arquivo: "",
 };
 
 
@@ -68,18 +71,12 @@ function init() {
     g_melhor.g = new CanvasJS.Chart("g-melhor", {
         zoomEnabled: true,
         title: { text: "Melhor indivíduo" },
-        data: [{
-            type: "line",
-            dataPoints: g_melhor.p
-        }]
+        data: [{ type: "line", dataPoints: g_melhor.p }]
     });
     g_margemDeErro.g = new CanvasJS.Chart("g-margem-de-erro", {
         zoomEnabled: true,
         title: { text: "Margem de erro" },
-        data: [{
-            type: "line",
-            dataPoints: g_margemDeErro.p
-        }]
+        data: [{ type: "line", dataPoints: g_margemDeErro.p }]
     });
     g_funcao.g = new CanvasJS.Chart("g-funcao", {
         zoomEnabled: true,
@@ -119,10 +116,9 @@ function init() {
 
 
 
-
 function executar(executarDoComeco) {
-    if(executarDoComeco) preExecutar(false);
-    else if (c.geracaoAtual === 0) {
+    if (executarDoComeco) preExecutar(false);
+    else if (c.geracaoAtual === 0 && executando === false) {
         preExecutar(true);
     } else {
         executarGeracao();
@@ -136,6 +132,14 @@ function preExecutar(executarUm) {
 
     //Armazena os valores dos inputs na variável global "c"
     setarCampos();
+    //Verifica se os valores são válidos
+    if (!verificarCampos()) {
+        executando = false;
+        return;
+    }
+    //Adiciona os parâmetros no arquivo
+    adicionarCamposNoArquivo();
+
     //Reseta os gráficos e plota a função
     gResetar();
     gPlotarFuncao();
@@ -146,10 +150,12 @@ function preExecutar(executarUm) {
 
     //Geração inicial
     c.pop = gerarPop(0, c.nIndv);
-    //Gerações
+    adicionarNoArquivo("\nGERAÇÃO INICIAL:\n" + c.pop + "\n\n");
+
 
     //Atualiza texto
-    setAtr("$pausar", "Pausar", "innerHTML");
+    setAtr("$pausar1", "Pausar", "innerHTML");
+    setAtr("$pausar2", "Pausar", "innerHTML");
 
     if (executarUm) executarGeracao();
     else executarGeracoes();
@@ -166,15 +172,22 @@ function executarGeracoes() {
 function executarGeracao() {
     //Aumenta a geração atual
     c.geracaoAtual++;
+    adicionarNoArquivo("\n\n\n--------------------------------------------------\n");
+    adicionarNoArquivo("GERAÇÃO NÚMERO " + c.geracaoAtual + ".\n");
 
     //AVALIAÇÃO
     let I = melhorIndv(c.pop);
+    adicionarNoArquivo(`MELHOR INDIVÍDUO DA GERAÇÃO:\n\tx: ${c.pop[I]}\n\tf(x): ${c.f(c.pop[I])}\n`);
 
     //Se o melhor atual é igual ao melhor geral
-    if (c.f(c.pop[I]) === c.f(c.melhorGeral) && ["_mut_acu", "_mut_acl"].includes(c._mut)) c.estagAtual++;
-    //Mas se encontrou um novo melhor
-    else if (c.f(c.pop[I]) > c.f(c.melhorGeral)) {
+    if (c.f(c.pop[I]) === c.f(c.melhorGeral) && ["_mut_acu", "_mut_acl"].includes(c._mut)) {
+        c.estagAtual++;
+        //Loga
+        adicionarNoArquivo(`Estagnação aumentada: De ${c.estagAtual - 1} para ${c.estagAtual}.\n`);
+        //Mas se encontrou um novo melhor
+    } else if (c.f(c.pop[I]) > c.f(c.melhorGeral)) {
         c.melhorGeral = c.pop[I];
+        adicionarNoArquivo(`O MELHOR INDIVÍDUO DESSA GERAÇÃO É O MELHOR JÁ ENCONTRADO.\n`);
         //Adiciona no gráfico da função
         gAddNovoMelhor(c.pop[I]);
         //Reseta o coeficiente
@@ -183,8 +196,12 @@ function executarGeracao() {
 
     //Impressão
     setAtr("output", `GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, g: ${c.pop[I]}, f(g): ${c.f(c.pop[I])}\n`);
+    adicionarNoArquivo(`\nINDIVÍDUOS DA GERAÇÃO ATUAL:\n`)
+    for (let i = 0; i < c.pop.length; i++) {
+        adicionarNoArquivo(`INDIVÍDUO ${i}:\n\tx: ${c.pop[i]}\n\tf(x): ${c.f(c.pop[i])}\n`);
+    }
     //Atualização do gráfico
-    //gAddIndividuos(c.pop);
+    gAddIndividuos(c.pop);
     gAddMelhorAtual(c.pop[I]);
 
     //ALTERAÇÃO
@@ -213,11 +230,51 @@ function pausar() {
         executando = false;
         clearInterval(geracoes);
         //Atualiza texto
-        setAtr("$pausar", "Continuar", "innerHTML");
+        setAtr("$pausar1", "Continuar", "innerHTML");
+        setAtr("$pausar2", "Continuar", "innerHTML");
+        //Senão, conitnua
     } else if (executando === false) {
         executando = true;
         //Atualiza texto
-        setAtr("$pausar", "Pausar", "innerHTML");
+        setAtr("$pausar1", "Pausar", "innerHTML");
+        setAtr("$pausar2", "Pausar", "innerHTML");
         executarGeracoes();
     }
 };
+
+function baixarArquivo() {
+    let arquivoBlob = new Blob([c.arquivo], { type: "text/plain" });
+    let elementoA = document.createElement("a");
+    elementoA.download = "Logs.txt";
+    elementoA.href = URL.createObjectURL(arquivoBlob);
+    elementoA.click();
+}
+
+function zoom() {
+
+    document.getElementById("fundo-preto").style.setProperty("visibility", "visible");
+    document.getElementById("botoes-zoom").style.setProperty("visibility", "visible");
+
+    let divFuncao = document.getElementById("g-funcao");
+    divFuncao.style.setProperty("position", "fixed");
+    divFuncao.style.setProperty("top", "22.5vh");
+    divFuncao.style.setProperty("left", "5vw");
+    divFuncao.style.setProperty("width", "90vw");
+    divFuncao.style.setProperty("height", "45vh");
+    divFuncao.style.setProperty("z-index", "1");
+    gAtualizar(g_funcao);
+}
+
+function unzoom() {
+    document.getElementById("fundo-preto").style.setProperty("visibility", "hidden");
+    document.getElementById("botoes-zoom").style.setProperty("visibility", "hidden");
+
+    let divFuncao = document.getElementById("g-funcao");
+    divFuncao.style.removeProperty("position");
+    divFuncao.style.removeProperty("top");
+    divFuncao.style.removeProperty("left");
+    divFuncao.style.removeProperty("width");
+    divFuncao.style.removeProperty("height");
+    divFuncao.style.removeProperty("z-index");
+    gAtualizar(g_funcao);
+}

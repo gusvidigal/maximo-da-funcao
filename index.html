@@ -338,8 +338,10 @@
         <div class="flex-column">
             <div class="flex-row flex-row-space-between">
                 <button onclick="executar(true)">Iniciar</button>
-                <button onclick="executar(false)">Executar Um</button>
-                <button id="$pausar" onclick="pausar()">Pausar</button>
+                <button onclick="executar(false)">Executar Uma Geração</button>
+                <button id="$pausar1" onclick="pausar()">Pausar</button>
+                <button onclick="baixarArquivo()">Baixar Logs</button>
+                <button onclick="zoom()">Zoom</button>
             </div>
             <div class="flex-row flex-row-space-between">
                 <p>Coef. de mut. atual:</p>
@@ -389,7 +391,14 @@
     </div>
     <div class="modulo" id="g-margem-de-erro"></div>
     <div class="modulo" id="g-melhor"></div>
-    <div class="modulo" id="g-funcao">
+    <div class="modulo" id="g-funcao"></div>
+    <div id="fundo-preto"></div>
+    <div class="flex-row flex-row-space-between" id="botoes-zoom">
+        <button onclick="executar(true)">Iniciar</button>
+        <button onclick="executar(false)">Executar Uma Geração</button>
+        <button id="$pausar2" onclick="pausar()">Pausar</button>
+        <button onclick="baixarArquivo()">Baixar Logs</button>
+        <button onclick="unzoom()">Voltar</button>
     </div>
 </body>
 
