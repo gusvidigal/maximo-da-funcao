@@ -193,8 +193,8 @@ textarea {
     width: calc(100% - 8px);
 }
 
-#logs[disabled=""],
-#output[disabled=""],
+#melhores[disabled=""],
+#melhor[disabled=""],
 #coeficiente_de_mutacao_atual[disabled=""] {
     color: black;
 }

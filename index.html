@@ -66,7 +66,7 @@
             </div>
             <div class="flex-inputs">
                 <input type="number" min="1" value="10" id="$tamanho_da_populacao">
-                <select id="_sel" onchange="atualizarSelect()">
+                <select id="_sel" onchange="atualizarSelectsHTML()">
                     <option value="_sel_eli">Elitismo</option>
                     <option value="_sel_rol">Roleta</option>
                     <option value="_sel_tor">Torneio</option>
@@ -244,7 +244,7 @@
                 <input class="input-de-lista" type="text" value="0.5" id="$lista_prob_mutacao_cada_gene">
                 <input class="input-de-lista" type="text" value="3" id="$lista_prob_mutacao_num_genes">
                 <input type="text" min="0" max="1" value="0" id="$probabilidade_catastrofe">
-                <select id="_cat" onchange="atualizarSelect()">
+                <select id="_cat" onchange="atualizarSelectsHTML()">
                     <option value="_cat_apt">Mais apto</option>
                     <option value="_cat_prg">Praga</option>
                     <option value="_cat_dis">Disruptiva</option>
@@ -329,7 +329,7 @@
             <div class="flex-inputs">
                 <input type="text" value="0.1" id="$mutacao_base">
                 <input type="text" value="0.5" id="$mutacao_positiva">
-                <select id="_mut" onchange="atualizarSelect()">
+                <select id="_mut" onchange="atualizarSelectsHTML()">
                     <option value="_mut_pad">Padrão</option>
                     <option value="_mut_acu">Acumulativa</option>
                     <option value="_mut_acl">Acumulativa limitada</option>
@@ -362,7 +362,7 @@
             </div>
             <textarea disabled id="melhor"></textarea>
             <div class="flex-row">
-                <p>Melhores Ao longo do tempo:</p>
+                <p>Melhores ao longo do tempo:</p>
             </div>
             <textarea disabled id="melhores"></textarea>
         </div>
