@@ -60,7 +60,7 @@ var c = {
 function init() {
 
     //Limpa os campos
-    delAtrs("$logs", "$output", "$coeficiente_de_mutacao_atual");
+    delAtrs("logs", "output", "coeficiente_de_mutacao_atual");
     //Altera, no carregamento da página, os campos bloqueados
     atualizarSelect();
 
@@ -120,14 +120,19 @@ function init() {
 
 
 
+function executar(executarDoComeco) {
+    if(executarDoComeco) preExecutar(false);
+    else if (c.geracaoAtual === 0) {
+        preExecutar(true);
+    } else {
+        executarGeracao();
+    }
+}
 
-
-
-function executar() {
+function preExecutar(executarUm) {
     //Para a repetição passada
     if (executando) clearInterval(geracoes);
     executando = true;
-
 
     //Armazena os valores dos inputs na variável global "c"
     setarCampos();
@@ -135,8 +140,8 @@ function executar() {
     gResetar();
     gPlotarFuncao();
     //Limpa os campos
-    setAtr("$coeficiente_de_mutacao_atual", c.mutBase);
-    delAtrs("$output", "$logs");
+    setAtr("coeficiente_de_mutacao_atual", c.mutBase);
+    delAtrs("output", "logs");
 
 
     //Geração inicial
@@ -145,52 +150,57 @@ function executar() {
 
     //Atualiza texto
     setAtr("$pausar", "Pausar", "innerHTML");
-    loop();
+
+    if (executarUm) executarGeracao();
+    else executarGeracoes();
 }
 
-
-//Geração de gerações
-function loop() {
+//Executa em loop
+function executarGeracoes() {
+    executando = true;
     geracoes = setInterval(() => {
-        //Aumenta a geração atual
-        c.geracaoAtual++;
-
-        //AVALIAÇÃO
-        let I = melhorIndv(c.pop);
-
-        //Se o melhor atual é igual ao melhor geral
-        if (c.f(c.pop[I]) === c.f(c.melhorGeral) && ["_mut_acu", "_mut_acl"].includes(c._mut)) c.estagAtual++;
-        //Mas se encontrou um novo melhor
-        else if (c.f(c.pop[I]) > c.f(c.melhorGeral)) {
-            c.melhorGeral = c.pop[I];
-            //Adiciona no gráfico da função
-            gAddNovoMelhor(c.pop[I]);
-            //Reseta o coeficiente
-            if (["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(true);
-        }
-
-        //Impressão
-        setAtr("$output", `GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, g: ${c.pop[I]}, f(g): ${c.f(c.pop[I])}\n`);
-        //Atualização do gráfico
-        //gAddIndividuos(c.pop);
-        gAddMelhorAtual(c.pop[I]);
-
-        //ALTERAÇÃO
-        //Catástrofe
-        if (zeroUm(c.pCat)) {
-            //Reseta o incremento atual e faz a catástrofe
-            if (["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(true);
-            c.pop = catastrofe(c._cat, c.pop);
-            return;
-        }
-        //Se atingiu a estagnação, reseta e incrementa a mutação
-        if (c.estagAtual >= c.estag && ["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(false);
-
-
-        //SELEÇÃO
-        c.pop = selecionar(c._sel, c.pop);
-
+        executarGeracao();
     }, c.delay);
+}
+//Executa uma geração
+function executarGeracao() {
+    //Aumenta a geração atual
+    c.geracaoAtual++;
+
+    //AVALIAÇÃO
+    let I = melhorIndv(c.pop);
+
+    //Se o melhor atual é igual ao melhor geral
+    if (c.f(c.pop[I]) === c.f(c.melhorGeral) && ["_mut_acu", "_mut_acl"].includes(c._mut)) c.estagAtual++;
+    //Mas se encontrou um novo melhor
+    else if (c.f(c.pop[I]) > c.f(c.melhorGeral)) {
+        c.melhorGeral = c.pop[I];
+        //Adiciona no gráfico da função
+        gAddNovoMelhor(c.pop[I]);
+        //Reseta o coeficiente
+        if (["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(true);
+    }
+
+    //Impressão
+    setAtr("output", `GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, g: ${c.pop[I]}, f(g): ${c.f(c.pop[I])}\n`);
+    //Atualização do gráfico
+    //gAddIndividuos(c.pop);
+    gAddMelhorAtual(c.pop[I]);
+
+    //ALTERAÇÃO
+    //Catástrofe
+    if (zeroUm(c.pCat)) {
+        //Reseta o incremento atual e faz a catástrofe
+        if (["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(true);
+        c.pop = catastrofe(c._cat, c.pop);
+        return;
+    }
+    //Se atingiu a estagnação, reseta e incrementa a mutação
+    if (c.estagAtual >= c.estag && ["_mut_acu", "_mut_acl"].includes(c._mut)) alterarIncAtual(false);
+
+
+    //SELEÇÃO
+    c.pop = selecionar(c._sel, c.pop);
 }
 
 
@@ -208,6 +218,6 @@ function pausar() {
         executando = true;
         //Atualiza texto
         setAtr("$pausar", "Pausar", "innerHTML");
-        loop();
+        executarGeracoes();
     }
 };

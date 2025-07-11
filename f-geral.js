@@ -32,7 +32,7 @@ function setarCampos() {
     c.mutLmax = formatarLimites(getAtr("$mutacoes_limite_maximo"), c.nGenes, 4);
 
     //Função
-    let funcao = new Function("p", getAtr("$funcao"));
+    let funcao = new Function("p", getAtr("funcao"));
     c.f = function (individuo) {
         if (!isFinite(funcao(individuo))) return c.escape;
         else return funcao(individuo);
@@ -83,7 +83,9 @@ function inputOff(id) {
 //Mudança nos selects
 function atualizarSelect() {
     //Primeiramente, ativa todos
-    document.querySelectorAll("input").forEach(elemento => elemento.disabled = false);
+    document.querySelectorAll("input").forEach(elemento => {
+        if (!elemento.classList.contains("disabled-input")) elemento.disabled = false;
+    });
     let _cat = document.getElementById("_cat").value;
     let _mut = document.getElementById("_mut").value;
     switch (_cat) {
@@ -181,8 +183,8 @@ function poli(x, coeficientes) {
 }
 //Loga uma linha no campo de logs
 function log(txt) {
-    document.getElementById("$logs").value += txt + '\n';
-    setAtr("$logs", getAtr("$logs", "scrollHeight"), "scrollTop");
+    document.getElementById("logs").value += txt + '\n';
+    setAtr("logs", getAtr("logs", "scrollHeight"), "scrollTop");
 }
 //Formata uma string para uma lista e a retorna
 function formatarLista(txt, tamanho, replacer) {
@@ -375,7 +377,7 @@ function gAddIndividuos(populacao) {
         addPonto(g_funcao.pm, criarPonto(5, populacao[i][0], c.f(populacao[i]), c.index));
         c.index += 1;
     }
-    while(g_funcao.pm.length > 500) g_funcao.pm.shift();
+    while (g_funcao.pm.length > 100) g_funcao.pm.shift();
 
     gAtualizar(g_funcao);
 }

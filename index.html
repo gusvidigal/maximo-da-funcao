@@ -13,26 +13,30 @@
 <body onload="init()" class="grid">
     <div class="modulo" id="c-geracoes">
         <h1>Gerações</h1>
-        <div class="config-com-inputs">
-            <div class="labels">
+        <div class="config-com-inputs flex-row flex-row-space-between">
+            <div class="flex-labels">
                 <p class="p-popup">População
                     <span class="popup-descricao">Quantidade fixa de indivíduos da população. Mínimo: 1<br>
                         Ex: <span class="texto-exemplo">10 para dez indivíduos.</span><br>
-                        Aviso: <span class="texto-aviso">Ideal manter esse número abaixo ou igual a 10000 para não crashar o
+                        Aviso: <span class="texto-aviso">Ideal manter esse número abaixo ou igual a 10000 para não
+                            crashar o
                             site.</span>
                     </span>
                 </p>
                 <p class="p-popup">Forma de seleção
                     <span class="popup-descricao">Escolhe a forma como a seleção do indivíduo dominante ocorrerá.<br>
-                        - Elitismo: <span class="texto-item-selecao">O melhor indivíduo cruzará com todos os outros.</span><br>
-                        - Roleta: <span class="texto-item-selecao">Se uma população estagnar durante X gerações, a mutação
+                        - Elitismo: <span class="texto-item-selecao">O melhor indivíduo cruzará com todos os
+                            outros.</span><br>
+                        - Roleta: <span class="texto-item-selecao">Se uma população estagnar durante X gerações, a
+                            mutação
                             aumenta. Após esse incremento, a estagnação zera.</span><br>
                         - Torneio: <span class="texto-item-selecao">Similar à acumulativa. Porém, se o incremento total
                             atingir um teto, ela reiniciará.</span><br>
                     </span>
                 </p>
                 <p class="p-popup">Geração inferior dos genes
-                    <span class="popup-descricao">Lista de N termos com o limite inferior de cada gene para a geração de novos
+                    <span class="popup-descricao">Lista de N termos com o limite inferior de cada gene para a geração de
+                        novos
                         indivíduos. A lista deverá ser separada por ";". Caso algum valor seja nulo, ele será
                         o valor do limite respectivo, ou -100 caso ele não exista.<br>Exemplo para 2 genes (N = 2):<br>
                         Ex: <span class="texto-exemplo">"0; -10000": Em gerações de novos indivíduos, os menores valores
@@ -40,7 +44,8 @@
                     </span>
                 </p>
                 <p class="p-popup">Geração superior dos genes
-                    <span class="popup-descricao">Lista de N termos com o limite superior de cada gene para a geração de novos
+                    <span class="popup-descricao">Lista de N termos com o limite superior de cada gene para a geração de
+                        novos
                         indivíduos. A lista deverá ser separada por ";". Caso algum valor seja nulo, ele será
                         o valor do limite respectivo, ou 100 caso ele não exista.<br>Exemplo para 2 genes (N = 2):<br>
                         Ex: <span class="texto-exemplo">"25; 5": Em gerações de novos indivíduos, os maiores valores
@@ -48,16 +53,18 @@
                     </span>
                 </p>
                 <p class="p-popup">Escape
-                    <span class="popup-descricao">A não ser quando especificado no código da função, ela retornará esse valor caso
+                    <span class="popup-descricao">A não ser quando especificado no código da função, ela retornará esse
+                        valor caso
                         o resultado seja indefinido. Ideal deixar esse número próximo de "menos infinito" para não
                         conflitar com outros valores.<br>
-                        Ex: <span class="texto-exemplo">-9999999 será o valor que a função retornará caso ela tente dividir
+                        Ex: <span class="texto-exemplo">-9999999 será o valor que a função retornará caso ela tente
+                            dividir
                             por
                             0 ou efetuar logaritmos de números negativos.</span>
                     </span>
                 </p>
             </div>
-            <div class="inputs">
+            <div class="flex-inputs">
                 <input type="number" min="1" value="10" id="$tamanho_da_populacao">
                 <select id="_sel" onchange="atualizarSelect()">
                     <option value="_sel_eli">Elitismo</option>
@@ -72,26 +79,30 @@
     </div>
     <div class="modulo" id="c-visualizacao">
         <h1>Visualização do gráfico</h1>
-        <div class="config-com-inputs">
-            <div class="labels">
+        <div class="config-com-inputs flex-row flex-row-space-between">
+            <div class="flex-labels">
                 <p class="p-popup">Tempo de geração
-                    <span class="popup-descricao">Quantidade do tempo, em milisegundos, de renderização das gerações. Nulo para ser
+                    <span class="popup-descricao">Quantidade do tempo, em milisegundos, de renderização das gerações.
+                        Nulo para ser
                         instantâneo<br>
                         Ex: <span class="texto-exemplo">300 para 0.3 segundos.</span>
                     </span>
                 </p>
                 <p class="p-popup">Redimensionamento
-                    <span class="popup-descricao">Quantidade de indivíduos visíveis nos gráficos do melhor indivíduo e da margem de
+                    <span class="popup-descricao">Quantidade de indivíduos visíveis nos gráficos do melhor indivíduo e
+                        da margem de
                         erro<br>
                         Ex: <span class="texto-exemplo">2000 para os 2000 indivíduos mais recentes.</span>
                     </span>
                 </p>
                 <p class="p-popup">Quantidade de pontos
-                    <span class="popup-descricao">O programa modelará a função inicialmente (caso só haja um gene) com essa
+                    <span class="popup-descricao">O programa modelará a função inicialmente (caso só haja um gene) com
+                        essa
                         quantidade de pontos, espaçados igualmente entre os limites mínimo e máximo da função (-1000 e
                         1000, se não houver).<br>
                         Ex: <span class="texto-exemplo">500 utilizará 500 pontos para modelar a função.</span><br>
-                        Aviso: <span class="texto-aviso">Para evitar crashar o site, favor deixar o valor igual ou abaixo de
+                        Aviso: <span class="texto-aviso">Para evitar crashar o site, favor deixar o valor igual ou
+                            abaixo de
                             10000.<br>VALOR IDEAL: 1000</span>
                     </span>
                 </p>
@@ -101,7 +112,7 @@
                     </span>
                 </p>
             </div>
-            <div class="inputs">
+            <div class="flex-inputs">
                 <input type="number" min="0" value="0" id="$delay_da_geracao">
                 <input type="number" min="1" value="2000" id="$resize">
                 <input type="number" min="1" value="10000" id="$nPtsFuncao">
@@ -111,18 +122,21 @@
     </div>
     <div class="modulo" id="c-genetica">
         <h1>Genética</h1>
-        <div class="config-com-inputs">
-            <div class="labels">
+        <div class="config-com-inputs flex-row flex-row-space-between">
+            <div class="flex-labels">
                 <p class="p-popup">Quantidade de genes
-                    <span class="popup-descricao">Quantidade de genes de cada indivíduo, isto é, de variáveis da função<br>
+                    <span class="popup-descricao">Quantidade de genes de cada indivíduo, isto é, de variáveis da
+                        função<br>
                         Ex: <span class="texto-exemplo">8 para oito variáveis.</span>
                     </span>
                 </p>
                 <p class="p-popup">Prob. de mutação de cada gene
-                    <span class="popup-descricao">Lista de N termos com a probabilidade de mutação de cada gene. A lista deverá ser
+                    <span class="popup-descricao">Lista de N termos com a probabilidade de mutação de cada gene. A lista
+                        deverá ser
                         separada por ";". Ela será reajustada para que cada termo corresponda a uma probabilidade. A
                         soma das probabilidades sempre será 1.<br>Exemplos para 2 genes (N = 2):<br>
-                        Ex: <span class="texto-exemplo">"0.3; 0.7": = (30%, 70%). 30% de chance de mutar o primeiro, 70% de
+                        Ex: <span class="texto-exemplo">"0.3; 0.7": = (30%, 70%). 30% de chance de mutar o primeiro, 70%
+                            de
                             mutar o segundo.</span><br>
                         Ex: <span class="texto-exemplo">"3; 7": = (30%, 70%).</span><br>
                         Ex: <span class="texto-exemplo">"1; 1": = (50% a 50%).</span><br>
@@ -134,13 +148,15 @@
                     </span>
                 </p>
                 <p class="p-popup">Prob. de mutação de X genes
-                    <span class="popup-descricao">Lista de N termos com a probabilidade de X genes serem mutados de uma vez. A
+                    <span class="popup-descricao">Lista de N termos com a probabilidade de X genes serem mutados de uma
+                        vez. A
                         lista deverá ser separada por ";". Ela será reajustada para que cada termo
                         corresponda a uma probabilidade. A soma das probabilidades sempre será 1. Geralmente,
                         probabilidades assim seguem a Curva de Gauss, isto é, há mais chance de metade dos genes serem
                         mutados do que todos ou apenas um (sempre algum gene será mutado).<br>Exemplos para 2
                         genes (N = 2):<br>
-                        Ex: <span class="texto-exemplo">"0.3; 0.7": = (30%, 70%). 30% de chance de mutar apenas um gene, 70%
+                        Ex: <span class="texto-exemplo">"0.3; 0.7": = (30%, 70%). 30% de chance de mutar apenas um gene,
+                            70%
                             de
                             mutar os dois.</span><br>
                         Ex: <span class="texto-exemplo">"3; 7": = (30%, 70%).</span><br>
@@ -153,14 +169,16 @@
                     </span>
                 </p>
                 <p class="p-popup">Probabilidade de Catástrofe
-                    <span class="popup-descricao">Chances de ocorrer uma catástrofe, seguindo as orientações do modelo selecionado.
+                    <span class="popup-descricao">Chances de ocorrer uma catástrofe, seguindo as orientações do modelo
+                        selecionado.
                         Quando uma catástrofe ocorrer, os indivíduos não sofrem mutações. Nulo para ela nunca
                         ocorrer.<br>
                         Ex: <span class="texto-exemplo">0.001 para 0.1% de chances de ocorrer a catástrofe.</span>
                     </span>
                 </p>
                 <p class="p-popup">Tipo da Catástrofe
-                    <span class="popup-descricao">Escolhe a forma como a catástrofe ocorrerá. Para todas as formas, se a quantidade
+                    <span class="popup-descricao">Escolhe a forma como a catástrofe ocorrerá. Para todas as formas, se a
+                        quantidade
                         fornecida for igual ou maior à quantidade de indivíduos, todos, menos o melhor, serão
                         substituídos.<br>
                         - Mais apto: <span class="texto-item-selecao">Os N piores indivíduos (exceto o melhor) serão
@@ -170,13 +188,15 @@
                         - Disruptiva: <span class="texto-item-selecao">Os N indivíduos medianos (exceto o melhor) serão
                             substituídos. Se N e a quantidade de indivíduos tiverem a mesma paridade, os N indivíduos
                             serão exatamente o centro da lista. Caso contrário, eles se aproximarão do pior.</span><br>
-                        - Estabilizadora: <span class="texto-item-selecao">Os N indivíduos extremais (exceto o melhor) serão
+                        - Estabilizadora: <span class="texto-item-selecao">Os N indivíduos extremais (exceto o melhor)
+                            serão
                             substituídos, isto é, os N/2 melhores e os N/2 piores. Caso N seja ímpar, mata os (N+1)/2
                             piores e os (N-1)/2 melhores.</span>
                     </span>
                 </p>
                 <p class="p-popup">N mortos pela catástrofe
-                    <span class="popup-descricao">MAIS APTO/PRAGA/DISRUPTIVA/ESTABILIZADORA: Determina quantos serão mortos pela
+                    <span class="popup-descricao">MAIS APTO/PRAGA/DISRUPTIVA/ESTABILIZADORA: Determina quantos serão
+                        mortos pela
                         catástrofe. Se o número
                         fornecido for maior que o número de indivíduos, a catástrofe matará todos, menos o melhor.<br>
                         Ex. MAIS APTO: <span class="texto-exemplo">4 para matar os 4 piores indivíduos.</span><br>
@@ -189,23 +209,27 @@
                     </span>
                 </p>
                 <p class="p-popup">Limite inferior dos genes
-                    <span class="popup-descricao">Lista de N termos com o limite inferior de cada gene, isto é, ele nunca será
+                    <span class="popup-descricao">Lista de N termos com o limite inferior de cada gene, isto é, ele
+                        nunca será
                         menor que esse valor. A lista deverá ser separada por ";". Deixe algum valor nulo para não haver
                         limite.<br>Exemplo para 2 genes (N = 2):<br>
-                        Ex: <span class="texto-exemplo">"-100; 0": O primeiro gene terá seu menor valor possível igual a -100,
+                        Ex: <span class="texto-exemplo">"-100; 0": O primeiro gene terá seu menor valor possível igual a
+                            -100,
                             enquanto o segundo será 0 ou positivo.</span><br>
                     </span>
                 </p>
                 <p class="p-popup">Limite superior dos genes
-                    <span class="popup-descricao">Lista de N termos com o limite superior de cada gene, isto é, ele nunca será
+                    <span class="popup-descricao">Lista de N termos com o limite superior de cada gene, isto é, ele
+                        nunca será
                         maior que esse valor. A lista deverá ser separada por ";". Deixe algum valor nulo para não haver
                         limite.<br>Exemplo para 2 genes (N = 2):<br>
-                        Ex: <span class="texto-exemplo">"50; 0": O primeiro gene terá seu maior valor possível igual a 50,
+                        Ex: <span class="texto-exemplo">"50; 0": O primeiro gene terá seu maior valor possível igual a
+                            50,
                             enquanto o segundo será 0 ou negativo.</span><br>
                     </span>
                 </p>
             </div>
-            <div class="inputs">
+            <div class="flex-inputs">
                 <input type="number" min="1" max="100" value="1" id="$numero_de_genes">
                 <input class="input-de-lista" type="text" value="0.5" id="$lista_prob_mutacao_cada_gene">
                 <input class="input-de-lista" type="text" value="3" id="$lista_prob_mutacao_num_genes">
@@ -224,8 +248,8 @@
     </div>
     <div class="modulo" id="c-mutacao">
         <h1>Mutação</h1>
-        <div class="config-com-inputs">
-            <div class="labels">
+        <div class="config-com-inputs flex-row flex-row-space-between">
+            <div class="flex-labels">
                 <p class="p-popup">Mutação base
                     <span class="popup-descricao">Base da variabilidade genética.<br>
                         Ex: <span class="texto-exemplo">0.5 incrementa, a princípio, 0.5 no gene.</span>
@@ -237,13 +261,17 @@
                     </span>
                 </p>
                 <p class="p-popup">Tipo da mutação
-                    <span class="popup-descricao">Escolhe a forma como a mutação ocorrerá. Para definir quantos e quais genes serão
+                    <span class="popup-descricao">Escolhe a forma como a mutação ocorrerá. Para definir quantos e quais
+                        genes serão
                         mais mutáveis, altere os valores da seção "Genética".<br>Para todas as formas abaixo, a
                         probabilidade de mutação positiva se aplica.<br>
-                        - Padrão: <span class="texto-item-selecao">O gene será mutado exatamente pela mutação base.</span><br>
-                        - Acumulativa: <span class="texto-item-selecao">Se uma população estagnar durante X gerações, a mutação
+                        - Padrão: <span class="texto-item-selecao">O gene será mutado exatamente pela mutação
+                            base.</span><br>
+                        - Acumulativa: <span class="texto-item-selecao">Se uma população estagnar durante X gerações, a
+                            mutação
                             aumenta. Após esse incremento, a estagnação zera.</span><br>
-                        - Acumulativa limitada: <span class="texto-item-selecao">Similar à acumulativa. Porém, se o incremento total
+                        - Acumulativa limitada: <span class="texto-item-selecao">Similar à acumulativa. Porém, se o
+                            incremento total
                             atingir um teto, ela reiniciará.</span><br>
                         - Caótica: <span class="texto-item-selecao">A mutação base se torna aleatória.</span>
                     </span>
@@ -260,30 +288,35 @@
                 </p>
                 <p class="p-popup">Teto da mutação
                     <span class="popup-descricao">Limite da mutação.<br>
-                        Ex: <span class="texto-exemplo">100 para que, se com o incremento a mutação chegar a 100, então ela
+                        Ex: <span class="texto-exemplo">100 para que, se com o incremento a mutação chegar a 100, então
+                            ela
                             reiniciará.</span>
                     </span>
                 </p>
                 <p class="p-popup">Lim. inf. da mutação
-                    <span class="popup-descricao">Lista de N termos positivos com o limite inferior da mutação de cada gene. A
+                    <span class="popup-descricao">Lista de N termos positivos com o limite inferior da mutação de cada
+                        gene. A
                         lista
                         deverá ser separada por ";". Caso algum valor seja nulo, ele será 0.<br>Exemplo para 2 genes (N
                         = 2):<br>
-                        Ex: <span class="texto-exemplo">"0; 3": A mutação mínima do primeiro gene é 0, enquanto que, a do
+                        Ex: <span class="texto-exemplo">"0; 3": A mutação mínima do primeiro gene é 0, enquanto que, a
+                            do
                             segundo, é 3.</span><br>
                     </span>
                 </p>
                 <p class="p-popup">Lim. sup. da mutação
-                    <span class="popup-descricao">Lista de N termos positivos com o limite superior da mutação de cada gene. A
+                    <span class="popup-descricao">Lista de N termos positivos com o limite superior da mutação de cada
+                        gene. A
                         lista
                         deverá ser separada por ";". Caso algum valor seja nulo, ele será
                         o valor do teto da mutação.<br>Exemplo para 2 genes (N = 2):<br>
-                        Ex: <span class="texto-exemplo">"10; 100": A mutação máxima do primeiro gene é 10, enquanto que, a do
+                        Ex: <span class="texto-exemplo">"10; 100": A mutação máxima do primeiro gene é 10, enquanto que,
+                            a do
                             segundo, é 100.</span><br>
                     </span>
                 </p>
             </div>
-            <div class="inputs">
+            <div class="flex-inputs">
                 <input type="text" value="0.1" id="$mutacao_base">
                 <input type="text" value="0.5" id="$mutacao_positiva">
                 <select id="_mut" onchange="atualizarSelect()">
@@ -302,44 +335,56 @@
     </div>
     <div class="modulo" id="c-controle">
         <h1>Controle</h1>
-        <div class="config-controle">
-            <div class="botoes">
-                <button type="button" id="$executar" onclick="executar()">Iniciar</button>
-                <button type="button" id="$pausar" onclick="pausar()">Pausar</button>
+        <div class="flex-column">
+            <div class="flex-row flex-row-space-between">
+                <button onclick="executar(true)">Iniciar</button>
+                <button onclick="executar(false)">Executar Um</button>
+                <button id="$pausar" onclick="pausar()">Pausar</button>
             </div>
-            <div class="display-coef">
+            <div class="flex-row flex-row-space-between">
                 <p>Coef. de mut. atual:</p>
-                <input type="text" id="$coeficiente_de_mutacao_atual">
+                <input class="disabled-input" disabled type="text" id="coeficiente_de_mutacao_atual">
             </div>
-            <textarea rows="3" cols="70" id="$output"></textarea>
-            <textarea rows="5" cols="70" id="$logs"></textarea>
+            <div class="flex-row">
+                <p>Melhor Atual</p>
+            </div>
+            <textarea disabled id="output"></textarea>
+            <div class="flex-row">
+                <p>Logs</p>
+            </div>
+            <textarea disabled id="logs"></textarea>
         </div>
     </div>
     <div class="modulo" id="c-funcao">
         <h1>Função</h1>
-        <div class="config-funcao">
+        <div class="flex-column">
             <p class="p-popup">Passe o mouse aqui para ver as especificações da função.
-                <span class="popup-descricao">A função a ser inserida na caixa é processada na linguagem JavaScript (não requer
+                <span class="popup-descricao">A função a ser inserida na caixa é processada na linguagem JavaScript (não
+                    requer
                     ";"). O pedaço de código é convertido com uma função "eval", ou seja, não é necessário incluir
                     nenhuma função mãe.<br>
                     Observações:<br>
-                    - <span class="texto-item-selecao">É possível utilizar as bibliotecas padrões (como Math). O valor de f() é o
+                    - <span class="texto-item-selecao">É possível utilizar as bibliotecas padrões (como Math). O valor
+                        de f() é o
                         mesmo retornado pelo
                         código, com a tag "return".</span><br>
-                    - <span class="texto-item-selecao">As variáveis (genes) são passadas por meio de um array de N elementos de nome
+                    - <span class="texto-item-selecao">As variáveis (genes) são passadas por meio de um array de N
+                        elementos de nome
                         "p". Para acessar, basta utilizar p[0], p[1], etc. Se preferir, defina no começo do código "let
                         x = p[0]; let y = p[1];" etc.</span><br>
-                    - <span class="texto-item-selecao">É possível utilizar a função poli() para gerar polinômios. Seu primeiro
+                    - <span class="texto-item-selecao">É possível utilizar a função poli() para gerar polinômios. Seu
+                        primeiro
                         parâmetro é a variável e os X seguintes são os coeficientes de um polinômio de grau
                         X-1, em ordem decrescente.</span><br>
                     Ex: <span class="texto-exemplo">"return poli(p[0], 3, 2, 4/5);" é equivalente a return 3*x*x + 2*x +
                         4/5</span><br>
-                    Ex: <span class="texto-exemplo">"return Math.sin(p[0])/p[0]" retorna sen(p[0])/p[0]. Note que, se p[0] =
+                    Ex: <span class="texto-exemplo">"return Math.sin(p[0])/p[0]" retorna sen(p[0])/p[0]. Note que, se
+                        p[0] =
                         0,
                         a função retornará o valor de escape.</span><br>
                 </span>
             </p>
-            <textarea rows="6" cols="70" id="$funcao"></textarea>
+            <textarea id="funcao"></textarea>
         </div>
     </div>
     <div class="modulo" id="g-margem-de-erro"></div>

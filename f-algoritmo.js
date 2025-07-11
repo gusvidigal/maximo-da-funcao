@@ -226,14 +226,14 @@ function alterarIncAtual(resetar) {
     else c.incAtual++;
     switch (c._mut) {
         case "_mut_pad":
-            setAtr("$coeficiente_de_mutacao_atual", c.mutBase);
+            setAtr("coeficiente_de_mutacao_atual", c.mutBase);
             break;
         case "_mut_acu":
         case "_mut_acl":
-            setAtr("$coeficiente_de_mutacao_atual", c.mutBase + c.incMutBase * c.incAtual);
+            setAtr("coeficiente_de_mutacao_atual", c.mutBase + c.incMutBase * c.incAtual);
             break;
         case "_mut_cao":
-            setAtr("$coeficiente_de_mutacao_atual", 0);
+            setAtr("coeficiente_de_mutacao_atual", 0);
             break;
     }
     c.estagAtual = 0;
