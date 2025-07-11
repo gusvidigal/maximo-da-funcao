@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="f-algoritmo.js"></script>
-<script src="f-geral.js"></script>
+<script src="f-auxiliares.js"></script>
 <script src="main.js"></script>
 <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body onload="init()" class="grid">
+<body onload="aoCarregarAPagina()" class="grid">
     <div class="modulo" id="c-geracoes">
         <h1>Gerações</h1>
         <div class="config-com-inputs flex-row flex-row-space-between">
@@ -111,12 +111,22 @@
                         Ex: <span class="texto-exemplo">30 compara o melhor indivíduo atual com o valor 30</span>
                     </span>
                 </p>
+                <p class="p-popup">Gerações visíveis
+                    <span class="popup-descricao">Quantidade de gerações que serão representadas no gráfico. Para um
+                        gene apenas, todos os indivíduos das ultimas N gerações serão mostrados no gráfico.<br>
+                        Ex: <span class="texto-exemplo">5 mostrará todos os indivíduos das últimas 5
+                            gerações.</span><br>
+                        Aviso: <span class="texto-aviso">Por questões de desempenho, recomenda-se que o total de pontos
+                            mostrados (gerações visíveis * população) não seja maior que 100.<br>VALOR IDEAL: 5</span>
+                    </span>
+                </p>
             </div>
             <div class="flex-inputs">
                 <input type="number" min="0" value="0" id="$delay_da_geracao">
                 <input type="number" min="1" value="2000" id="$resize">
                 <input type="number" min="1" value="10000" id="$nPtsFuncao">
-                <input type="text" id="$comparacao_margem_de_erro"><br>
+                <input type="text" value="2.828461" id="$comparacao_margem_de_erro"><br>
+                <input type="number" min="0" value="0" id="$geracoes_visiveis">
             </div>
         </div>
     </div>
@@ -233,7 +243,7 @@
                 <input type="number" min="1" max="100" value="1" id="$numero_de_genes">
                 <input class="input-de-lista" type="text" value="0.5" id="$lista_prob_mutacao_cada_gene">
                 <input class="input-de-lista" type="text" value="3" id="$lista_prob_mutacao_num_genes">
-                <input type="text" min="0" max="1" value="0.01" id="$probabilidade_catastrofe">
+                <input type="text" min="0" max="1" value="0" id="$probabilidade_catastrofe">
                 <select id="_cat" onchange="atualizarSelect()">
                     <option value="_cat_apt">Mais apto</option>
                     <option value="_cat_prg">Praga</option>
@@ -325,7 +335,7 @@
                     <option value="_mut_acl">Acumulativa limitada</option>
                     <option value="_mut_cao">Caótica</option>
                 </select>
-                <input type="number" min="1" value="2" id="$estagnacao">
+                <input type="number" min="1" value="50" id="$estagnacao">
                 <input type="text" value="0.1" id="$incremento_da_mutacao_base">
                 <input type="text" value="100" id="$teto_da_mutacao_base">
                 <input class="input-de-lista" type="text" id="$mutacoes_limite_minimo">
@@ -337,22 +347,24 @@
         <h1>Controle</h1>
         <div class="flex-column">
             <div class="flex-row flex-row-space-between">
-                <button onclick="executar(true)">Iniciar</button>
-                <button onclick="executar(false)">Executar Um</button>
-                <button id="$pausar" onclick="pausar()">Pausar</button>
+                <button onclick="executar()">Iniciar</button>
+                <button onclick="executarGeracao()">Executar 1 Geração</button>
+                <button class="botao-pausa" onclick="pausarExecucao()">Pausar</button>
+                <button onclick="baixarArquivo()">Baixar Logs</button>
+                <button onclick="zoomDaFuncao()">Zoom</button>
             </div>
             <div class="flex-row flex-row-space-between">
                 <p>Coef. de mut. atual:</p>
                 <input class="disabled-input" disabled type="text" id="coeficiente_de_mutacao_atual">
             </div>
             <div class="flex-row">
-                <p>Melhor Atual</p>
+                <p>Melhor Atual:</p>
             </div>
-            <textarea disabled id="output"></textarea>
+            <textarea disabled id="melhor"></textarea>
             <div class="flex-row">
-                <p>Logs</p>
+                <p>Melhores Ao longo do tempo:</p>
             </div>
-            <textarea disabled id="logs"></textarea>
+            <textarea disabled id="melhores"></textarea>
         </div>
     </div>
     <div class="modulo" id="c-funcao">
@@ -389,7 +401,14 @@
     </div>
     <div class="modulo" id="g-margem-de-erro"></div>
     <div class="modulo" id="g-melhor"></div>
-    <div class="modulo" id="g-funcao">
+    <div class="modulo" id="g-funcao"></div>
+    <div id="fundo-preto"></div>
+    <div class="flex-row flex-row-space-between" id="botoes-zoom">
+        <button onclick="executar()">Iniciar</button>
+        <button onclick="executarGeracao()">Executar 1 Geração</button>
+        <button class="botao-pausa" onclick="pausarExecucao()">Pausar</button>
+        <button onclick="baixarArquivo()">Baixar Logs</button>
+        <button onclick="unzoomDaFuncao()">Voltar</button>
     </div>
 </body>
 

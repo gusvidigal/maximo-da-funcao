@@ -1,22 +1,22 @@
 
-function gerarIndv() {
+function gerarIndividuo() {
     let individuo = [];
-    for (let i = 0; i < c.nGenes; i++) individuo.push(randNum(c.genesLminGer[i], c.genesLmaxGer[i], true))
+    for (let i = 0; i < c.nGenes; i++) individuo.push(escolherNumReal(c.genesLminGer[i], c.genesLmaxGer[i], true))
     return individuo;
 }
 
 //GERAÇÃO INICIAL
 //Função principal
-function gerarPop(tipo, tamanho) {
+function gerarPopulacao(tipo, tamanho) {
     switch (tipo) {
         case 0:
-            return gerarPopAleatoria(tamanho);
+            return gerarPopulacaoAleatoriamente(tamanho);
     }
 }
 //Geração padrão: indivíduos aleatórios, genes aleatórios
-function gerarPopAleatoria(tamanho) {
+function gerarPopulacaoAleatoriamente(tamanho) {
     let lista = [];
-    for (let i = 0; i < tamanho; i++) lista.push(gerarIndv());
+    for (let i = 0; i < tamanho; i++) lista.push(gerarIndividuo());
     return lista;
 }
 
@@ -32,7 +32,7 @@ function gerarPopAleatoria(tamanho) {
 
 //CATASTROFE
 //Função principal
-function catastrofe(tipo, pop) {
+function realizarCatastrofe(tipo, pop) {
     let qtdeRemovidos;
     let populacaoNova = [];
     switch (tipo) {
@@ -44,7 +44,8 @@ function catastrofe(tipo, pop) {
             populacaoNova = matarNIndividuos(tipo, pop);
             break;
     }
-    log(`GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, Catástrofe! ${qtdeRemovidos} foram substituídos.`);
+    addLinhaEmMelhoresIndividuos(`GEN: ${c.geracaoAtual.toString().padStart(5, 0)}, Catástrofe! ${qtdeRemovidos} foram substituídos.`);
+    addNoArquivo(`Catástrofe! ${qtdeRemovidos} foram substituídos.\n`);
     return populacaoNova;
 }
 //Catastrofe mata n indivíduos
@@ -75,7 +76,7 @@ function matarNIndividuos(tipo, pop) {
     }
     //Substitui
     while (popNova.length < pop.length) {
-        popNova.push(gerarIndv());
+        popNova.push(gerarIndividuo());
     }
     return popNova;
 }
@@ -86,14 +87,14 @@ function matarNIndividuos(tipo, pop) {
 
 
 //Retorna o melhor indivíduo
-function melhorIndv(populacao) {
+function melhorIndividuoDaPopulacao(populacao) {
     let melhorIndice = 0;
     for (let i = 0; i < populacao.length; i++) {
         if (c.f(populacao[i]) > c.f(populacao[melhorIndice])) melhorIndice = i;
     }
     return melhorIndice;
 }
-function piorIndv(populacao) {
+function piorIndividuoDaPopulacao(populacao) {
     let piorIndice = 0;
     for (let i = 0; i < populacao.length; i++) {
         if (c.f(populacao[i]) < c.f(populacao[piorIndice])) piorIndice = i;
@@ -102,36 +103,39 @@ function piorIndv(populacao) {
 }
 //SELEÇÃO
 //Função principal
-function selecionar(tipo, populacao) {
-    populacao = copiar(populacao);
+function realizarSelecao(tipo, populacao) {
+    populacao = copiarLista(populacao);
     switch (tipo) {
         case "_sel_eli":
-            return selecionarElitismo(populacao);
+            return selecaoPorElitismo(populacao);
         case "_sel_rol":
-            return selecionarRoleta(populacao);
+            return selecaoPorRoleta(populacao);
         case "_sel_tor":
-            return selecionarTorneio(populacao);
+            return selecaoPorTorneio(populacao);
     }
 }
 //Seleção por elitismo
-function selecionarElitismo(populacao) {
-    let I = melhorIndv(populacao);
+function selecaoPorElitismo(populacao) {
+    let I = melhorIndividuoDaPopulacao(populacao);
     for (let i = 0; i < populacao.length; i++) {
         if (i == I) continue;
         //CRUZAMENTO
-        populacao[i] = cruzar(0, populacao[i], populacao[I]);
+        addNoArquivo(`\n\nCRUZAMENTO DO INDIVÍDUO DE ÍNDICE ${i} COM O MELHOR:\n\t${populacao[i]}\n\tMelhor: ${populacao[I]}\n`);
+        populacao[i] = realizarCruzamento(0, populacao[i], populacao[I]);
+        addNoArquivo(`APÓS O CRUZAMENTO:\n\t${populacao[i]}\n`);
 
         //MUTAÇÃO
-        populacao[i] = mutar(c._mut, populacao[i]);
+        addNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO DE ÍNDICE ${i}:\n\t${populacao[i]}\n`);
+        populacao[i] = realizarMutacao(c._mut, populacao[i]);
     }
     return populacao;
 }
 //Seleção por roleta
-function selecionarRoleta(populacao) {
-    let i = piorIndv(populacao);
-    let I = melhorIndv(populacao);
+function selecaoPorRoleta(populacao) {
+    let i = piorIndividuoDaPopulacao(populacao);
+    let I = melhorIndividuoDaPopulacao(populacao);
     //Adiciona o melhor individuo na populacao
-    let populacaoNova = copiar(populacao);
+    let populacaoNova = copiarLista(populacao);
     populacaoNova.push(populacao[I]);
     //Cria a roleta
     let roleta = populacao.map(c.f);
@@ -139,48 +143,58 @@ function selecionarRoleta(populacao) {
     for (let j = 0; j < populacao.length; j++) {
         roleta[j] += normalizacao + 1;
     }
-    roleta = formatarProb(roleta, populacao.length, true);
+    roleta = formatarParaProbabilidades(roleta, populacao.length, true);
+    addNoArquivo(`ROLETA DOS INDIVÍDUOS:\n\t${roleta}\n`);
     //Escolhe os indivíduos
-    let genitor1 = randIndex(roleta);
-    let genitor2 = randIndex(roleta);
+    let genitor1 = escolherIndiceDeProbabilidades(roleta);
+    let genitor2 = escolherIndiceDeProbabilidades(roleta);
     populacaoNova.push(populacao[genitor1]);
     populacaoNova.push(populacao[genitor2]);
+    addNoArquivo(`GENITORES:\n1) x:${populacao[genitor1]}\n\tf(x):${c.f(populacao[genitor1])}\n2) x:${populacao[genitor2]}\n\tf(x):${c.f(populacao[genitor2])}\n`);
     //Faz eles cruzarem
     while (populacaoNova.length != populacao.length) {
         if (populacaoNova.length > populacao.length) populacaoNova.pop();
         else {
             //CRUZAMENTO
-            let individuo = cruzar(0, populacao[genitor1], populacao[genitor2]);
+            addNoArquivo(`\n\nCRUZAMENTO DOS INDIVÍDUOS:\n\t${populacao[genitor1]}\n\t${populacao[genitor2]}\n`);
+            let individuo = realizarCruzamento(0, populacao[genitor1], populacao[genitor2]);
+            addNoArquivo(`RESULTADO:\n\t${individuo}\n`);
 
             //MUTAÇÃO
-            individuo = mutar(c._mut, individuo);
+            addNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO:\n\t${individuo}\n\n`);
+            individuo = realizarMutacao(c._mut, individuo);
             populacaoNova.push(individuo);
         }
     }
     return populacaoNova;
 }
 //Seleção por torneio
-function selecionarTorneio(populacao) {
-    let I = melhorIndv(populacao);
-    let populacaoNova = copiar(populacao);
+function selecaoPorTorneio(populacao) {
+    let I = melhorIndividuoDaPopulacao(populacao);
+    let populacaoNova = copiarLista(populacao);
     for (let i = 0; i < populacao.length; i++) {
         if (i == I) continue;
 
         let a, b;
         //Sorteia dois para lutarem e ser o pai
-        a = randEl(populacao);
-        b = randEl(populacao);
+        a = escolherindiceDeLista(populacao);
+        b = escolherindiceDeLista(populacao);
         let genitor1 = c.f(populacao[a]) > c.f(populacao[b]) ? a : b;
+        addNoArquivo(`TORNEIO 1:\nA: x: ${populacao[a]}\n\tf(x): ${c.f(populacao[a])}\nB: x: ${populacao[b]}\n\tf(x): ${c.f(populacao[b])}\nVENCEDOR:\n\t${populacao[genitor1]}\n`);
         //Sorteia dois para lutarem e ser a mãe
-        a = randEl(populacao);
-        b = randEl(populacao);
+        a = escolherindiceDeLista(populacao);
+        b = escolherindiceDeLista(populacao);
         let genitor2 = c.f(populacao[a]) > c.f(populacao[b]) ? a : b;
+        addNoArquivo(`TORNEIO 2:\nA: x: ${populacao[a]}\n\tf(x): ${c.f(populacao[a])}\nB: x: ${populacao[b]}\n\tf(x): ${c.f(populacao[b])}\nVENCEDOR:\n\t${populacao[genitor2]}\n`);
 
         //CRUZAMENTO
-        populacaoNova[i] = cruzar(0, populacao[genitor1], populacao[genitor2]);
+        addNoArquivo(`\n\nCRUZAMENTO DOS INDIVÍDUOS:\n\t${populacao[genitor1]}\n\t${populacao[genitor2]}\n`);
+        populacaoNova[i] = realizarCruzamento(0, populacao[genitor1], populacao[genitor2]);
+        addNoArquivo(`RESULTADO (ÍNDICE ${i}):\n\t${populacaoNova[i]}\n`);
 
         //MUTAÇÃO
-        populacaoNova[i] = mutar(c._mut, populacaoNova[i]);
+        addNoArquivo(`\nMUTAÇÃO DO INDIVÍDUO DE ÍNDICE ${i}:\n\t${populacaoNova[i]}\n\n`);
+        populacaoNova[i] = realizarMutacao(c._mut, populacaoNova[i]);
     }
     return populacaoNova;
 }
@@ -196,16 +210,16 @@ function selecionarTorneio(populacao) {
 
 //CRUZAMENTO
 //Função principal
-function cruzar(tipo, individuo, melhor) {
-    individuo = copiar(individuo);
-    melhor = copiar(melhor);
+function realizarCruzamento(tipo, individuo, melhor) {
+    individuo = copiarLista(individuo);
+    melhor = copiarLista(melhor);
     switch (tipo) {
         case 0:
-            return crossingover(individuo, melhor);
+            return cruzamentoPorMedia(individuo, melhor);
     }
 }
-//Crossing-over
-function crossingover(individuo, melhor) {
+//Cruzamento Por Media
+function cruzamentoPorMedia(individuo, melhor) {
     for (let i = 0; i < individuo.length; i++) {
         individuo[i] = (melhor[i] + individuo[i]) / 2;
     }
@@ -221,71 +235,88 @@ function crossingover(individuo, melhor) {
 
 //MUTAÇÃO
 //Altera o incremento atual
-function alterarIncAtual(resetar) {
+function alterarIncrementoDaMutacaoAtual(resetar) {
     if (resetar) c.incAtual = 0;
     else c.incAtual++;
     switch (c._mut) {
         case "_mut_pad":
-            setAtr("coeficiente_de_mutacao_atual", c.mutBase);
+            setarAtributoHTML("coeficiente_de_mutacao_atual", c.mutBase);
             break;
         case "_mut_acu":
         case "_mut_acl":
-            setAtr("coeficiente_de_mutacao_atual", c.mutBase + c.incMutBase * c.incAtual);
+            setarAtributoHTML("coeficiente_de_mutacao_atual", c.mutBase + c.incMutBase * c.incAtual);
             break;
         case "_mut_cao":
-            setAtr("coeficiente_de_mutacao_atual", 0);
+            setarAtributoHTML("coeficiente_de_mutacao_atual", 0);
             break;
     }
     c.estagAtual = 0;
 }
 //Função principal
-function mutar(tipo, individuo) {
+function realizarMutacao(tipo, individuo) {
     //Quantos serão mutados
-    let qtdeMutados = randIndex(c.listaPNumGene) + 1;
+    let qtdeMutados = escolherIndiceDeProbabilidades(c.listaPNumGene) + 1;
+    addNoArquivo(`Quantidade de genes a serem mutados: ${qtdeMutados}\n`);
     //Quais serão mutados
     let genesParaMutar = [];
-    let aux = copiar(c.listaPCadaGene);
+    let aux = copiarLista(c.listaPCadaGene);
     while (genesParaMutar.length < qtdeMutados) {
-        let gene = randIndex(aux);
+        let gene = escolherIndiceDeProbabilidades(aux);
         genesParaMutar.push(gene);
         aux.splice(gene, 1);
     }
+    addNoArquivo(`Quais serão mutados: ${genesParaMutar}\n`);
 
-    individuo = copiar(individuo);
+    individuo = copiarLista(individuo);
     switch (tipo) {
         case "_mut_pad":
         case "_mut_acu":
         case "_mut_acl":
         case "_mut_cao":
-            return mutacao(tipo, individuo, genesParaMutar);
+            return mutacaoPorAleatoriedade(tipo, individuo, genesParaMutar);
     }
 }
-function mutacao(tipo, individuo, genesParaMutar) {
+function mutacaoPorAleatoriedade(tipo, individuo, genesParaMutar) {
     //Mutação dos genes
     for (let i = 0; i < genesParaMutar.length; i++) {
-        let sinal = (zeroUm(c.pMutPos) ? 1 : -1);
+        let sinal = (escolherZeroUm(c.pMutPos) ? 1 : -1);
         let mutacao;
         switch (tipo) {
             case "_mut_pad":
                 mutacao = sinal * c.mutBase;
+                addNoArquivo(`Mutação: ${sinal}*${c.mutBase} = ${mutacao}\n`);
                 break;
             case "_mut_acu":
                 mutacao = sinal * (c.mutBase + c.incMutBase * c.incAtual);
+                addNoArquivo(`Mutação: ${sinal}*(${c.mutBase}+${c.incMutBase}*${c.incAtual}) = ${mutacao}\n`);
                 break;
             case "_mut_acl":
-                if (c.incMutBase * c.incAtual > c.tetoMut) alterarIncAtual(true);
+                if (c.incMutBase * c.incAtual > c.tetoMut) {
+                    addNoArquivo(`A mutação excedeu o teto! Teto: ${c.tetoMut}, Valor: ${c.incMutBase * c.incAtual}\n`);
+                    alterarIncrementoDaMutacaoAtual(true);
+                }
                 mutacao = sinal * (c.mutBase + c.incMutBase * c.incAtual);
+                addNoArquivo(`Mutação: ${sinal}*(${c.mutBase}+${c.incMutBase}*${c.incAtual}) = ${mutacao}\n`);
                 break;
             case "_mut_cao":
-                mutacao = sinal * randNum(c.mutLmin[genesParaMutar[i]], c.mutLmax[genesParaMutar[i]]);
+                mutacao = sinal * escolherNumReal(c.mutLmin[genesParaMutar[i]], c.mutLmax[genesParaMutar[i]]);
+                addNoArquivo(`Mutação: ${sinal}*${Math.abs(mutacao)} = ${mutacao}\n`);
                 break;
         }
         //Muta o gene
         let gene = individuo[genesParaMutar[i]];
+        addNoArquivo(`Gene antigo: ${gene}.\n`);
         gene += mutacao;
         //Limitação
-        if (c.genesLmin[genesParaMutar[i]] !== null && gene < c.genesLmin[genesParaMutar[i]]) gene = c.genesLmin[genesParaMutar[i]];
-        if (c.genesLmax[genesParaMutar[i]] !== null && gene > c.genesLmax[genesParaMutar[i]]) gene = c.genesLmax[genesParaMutar[i]];
+        if (c.genesLmin[genesParaMutar[i]] !== null && gene < c.genesLmin[genesParaMutar[i]]) {
+            addNoArquivo(`O gene atingiu o limite mínimo.\n`);
+            gene = c.genesLmin[genesParaMutar[i]];
+        }
+        if (c.genesLmax[genesParaMutar[i]] !== null && gene > c.genesLmax[genesParaMutar[i]]) {
+            addNoArquivo(`O gene atingiu o limite máximo.\n`);
+            gene = c.genesLmax[genesParaMutar[i]];
+        }
+        addNoArquivo(`Novo gene: ${gene}.\n`);
         individuo[genesParaMutar[i]] = gene;
     }
     return individuo;
