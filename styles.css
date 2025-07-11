@@ -1,3 +1,12 @@
+:root {
+    --blue: lightblue;
+    --dblue: rgb(134, 166, 177);
+    --red: red;
+    --green: green;
+    --ddblue: blue;
+}
+
+
 body {
     margin: 10px;
     /*MENOS 20 DA MARGEM*/
@@ -17,7 +26,7 @@ body {
             padding: 5px 0 5px 0;
             margin: 0px;
             border-bottom: 2px solid black;
-            background-color: lightblue;
+            background-color: var(--blue);
 
             text-align: center;
             font-size: 20px;
@@ -69,32 +78,24 @@ body {
             }
         }
 
-        &#c-controle>div {
-            /*MENOS 30 DO H1 E 10 DO PADDING*/
-            height: calc(100% - 40px);
-
-            & #output {
-                height: 20px;
-            }
-
-            & #logs {
-                flex-grow: 1;
-            }
+        #melhor {
+            height: 30px;
         }
 
-        &#c-funcao>div {
+        #melhores,
+        #funcao {
+            flex-grow: 1;
+        }
+
+        &#c-controle>div.flex-column,
+        &#c-funcao>div.flex-column {
             /*MENOS 30 DO H1 E 10 DO PADDING*/
             height: calc(100% - 40px);
-
-            & #funcao {
-                flex-grow: 1;
-            }
-
         }
     }
 
-    & div#fundo-preto {
-        background-color: #00000060;
+    & #fundo-preto {
+        background-color: #000000c4;
         position: fixed;
         top: 0;
         left: 0;
@@ -102,11 +103,12 @@ body {
         height: 100vh;
         visibility: hidden;
     }
-    & div#botoes-zoom {
+
+    & #botoes-zoom {
         position: fixed;
         top: calc(78vh - 25px);
-        left: calc(50vw - 250px);
-        width: 500px;
+        left: calc(50vw - 200px);
+        width: 400px;
         height: 50px;
         visibility: hidden;
     }
@@ -174,12 +176,27 @@ body {
 
 
 
+button {
+    background: var(--blue);
+    border: 2px solid black;
+    border-radius: 5px;
 
+    &:hover {
+        background: var(--dblue);
+        cursor: pointer;
+    }
+}
 
 textarea {
     resize: none;
     /*MENOS 8 DA BORDA+PADDING DO TEXTAREA*/
     width: calc(100% - 8px);
+}
+
+#logs[disabled=""],
+#output[disabled=""],
+#coeficiente_de_mutacao_atual[disabled=""] {
+    color: black;
 }
 
 p {
@@ -217,7 +234,7 @@ p {
         }
 
         &:hover {
-            color: blue;
+            color: var(--ddblue);
 
             & .popup-descricao {
                 display: block;
@@ -244,16 +261,16 @@ p {
 /*TEXTOS DOS POPUPS*/
 .texto-item-selecao {
     font-style: bold;
-    color: green;
+    color: var(--green);
 }
 
 .texto-exemplo {
     font-style: italic;
-    color: blue;
+    color: var(--ddblue);
 }
 
 .texto-aviso {
     font-style: italic;
     font-weight: bold;
-    color: red;
+    color: var(--red);
 }

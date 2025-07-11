@@ -1,37 +1,37 @@
-//Setar e checagem de atributos
-function setarCampos() {
+//Obtem os parâmetros do HTML
+function obterParametros() {
     //Gerações
-    c.nIndv = parseInt(getAtr("$tamanho_da_populacao"));
-    c._sel = getAtr("_sel");
-    c.escape = parseFloat(getAtr("$escape"));
+    c.nIndv = parseInt(obterAtributoHTML("$tamanho_da_populacao"));
+    c._sel = obterAtributoHTML("_sel");
+    c.escape = parseFloat(obterAtributoHTML("$escape"));
 
     //Mutações
-    c.mutBase = parseFloat(getAtr("$mutacao_base"));
-    c.pMutPos = parseFloat(getAtr("$mutacao_positiva"));
-    c._mut = getAtr("_mut");
-    c.estag = parseInt(getAtr("$estagnacao"));
-    c.incMutBase = parseFloat(getAtr("$incremento_da_mutacao_base"));
-    c.tetoMut = parseFloat(getAtr("$teto_da_mutacao_base"));
+    c.mutBase = parseFloat(obterAtributoHTML("$mutacao_base"));
+    c.pMutPos = parseFloat(obterAtributoHTML("$mutacao_positiva"));
+    c._mut = obterAtributoHTML("_mut");
+    c.estag = parseInt(obterAtributoHTML("$estagnacao"));
+    c.incMutBase = parseFloat(obterAtributoHTML("$incremento_da_mutacao_base"));
+    c.tetoMut = parseFloat(obterAtributoHTML("$teto_da_mutacao_base"));
 
     //Genética
-    c.nGenes = parseInt(getAtr("$numero_de_genes"));
-    c.listaPCadaGene = formatarProb(getAtr("$lista_prob_mutacao_cada_gene"), c.nGenes);
-    c.listaPNumGene = formatarProb(getAtr("$lista_prob_mutacao_num_genes"), c.nGenes);
-    c.pCat = parseFloat(getAtr("$probabilidade_catastrofe"));
-    c._cat = getAtr("_cat");
-    c.nMortosCat = parseInt(getAtr("$numero_de_mortos_catastrofe"));
+    c.nGenes = parseInt(obterAtributoHTML("$numero_de_genes"));
+    c.listaPCadaGene = formatarParaProbabilidades(obterAtributoHTML("$lista_prob_mutacao_cada_gene"), c.nGenes);
+    c.listaPNumGene = formatarParaProbabilidades(obterAtributoHTML("$lista_prob_mutacao_num_genes"), c.nGenes);
+    c.pCat = parseFloat(obterAtributoHTML("$probabilidade_catastrofe"));
+    c._cat = obterAtributoHTML("_cat");
+    c.nMortosCat = parseInt(obterAtributoHTML("$numero_de_mortos_catastrofe"));
     if (c.nMortosCat >= c.nIndv) c.nMortosCat = c.nIndv - 1;
-    c.genesLmin = formatarLista(getAtr("$genes_limite_minimo"), c.nGenes, null);
-    c.genesLmax = formatarLista(getAtr("$genes_limite_maximo"), c.nGenes, null);
+    c.genesLmin = stringParaLista(obterAtributoHTML("$genes_limite_minimo"), c.nGenes, null);
+    c.genesLmax = stringParaLista(obterAtributoHTML("$genes_limite_maximo"), c.nGenes, null);
     //Gerações
-    c.genesLminGer = formatarLimites(getAtr("$genes_limite_minimo_geracao"), c.nGenes, 1);
-    c.genesLmaxGer = formatarLimites(getAtr("$genes_limite_maximo_geracao"), c.nGenes, 2);
+    c.genesLminGer = formatarParaLimites(obterAtributoHTML("$genes_limite_minimo_geracao"), c.nGenes, 1);
+    c.genesLmaxGer = formatarParaLimites(obterAtributoHTML("$genes_limite_maximo_geracao"), c.nGenes, 2);
     //Mutações
-    c.mutLmin = formatarLimites(getAtr("$mutacoes_limite_minimo"), c.nGenes, 3);
-    c.mutLmax = formatarLimites(getAtr("$mutacoes_limite_maximo"), c.nGenes, 4);
+    c.mutLmin = formatarParaLimites(obterAtributoHTML("$mutacoes_limite_minimo"), c.nGenes, 3);
+    c.mutLmax = formatarParaLimites(obterAtributoHTML("$mutacoes_limite_maximo"), c.nGenes, 4);
 
     //Função
-    let funcao = new Function("p", getAtr("funcao"));
+    let funcao = new Function("p", obterAtributoHTML("funcao"));
     c.f = function (individuo) {
         if (!isFinite(funcao(individuo))) return c.escape;
         else return funcao(individuo);
@@ -39,12 +39,13 @@ function setarCampos() {
 
 
     //Visualização do Gráfico
-    c.delay = parseInt(getAtr("$delay_da_geracao"));
-    c.resize = parseInt(getAtr("$resize"));
-    c.nPtsFuncao = parseInt(getAtr("$nPtsFuncao"));
+    c.delay = parseInt(obterAtributoHTML("$delay_da_geracao"));
+    c.resize = parseInt(obterAtributoHTML("$resize"));
+    c.nPtsFuncao = parseInt(obterAtributoHTML("$nPtsFuncao"));
+    c.gerVisiveis = parseInt(obterAtributoHTML("$geracoes_visiveis"));
 
     //Gráficos
-    c.compMargem = parseFloat(getAtr("$comparacao_margem_de_erro"));
+    c.compMargem = parseFloat(obterAtributoHTML("$comparacao_margem_de_erro"));
 
     //Outros
     c.estagAtual = 0;
@@ -57,7 +58,7 @@ function setarCampos() {
     c.arquivo = "";
 }
 //Verifica se todos os campos foram preenchidos corretamente e retorna true caso sim
-function verificarCampos() {
+function verificarParametros() {
 
     function alertarNaN(placeholder, valor) {
         if (isNaN(valor)) {
@@ -108,17 +109,25 @@ function verificarCampos() {
     else if (alertarMenorQueUm("resize", c.resize)) return false;
     else if (alertarNaN("número de pontos da função", c.nPtsFuncao)) return false;
     else if (alertarMenorQueUm("número de pontos da função", c.nPtsFuncao)) return false;
+    else if (alertarNaN("gerações visíveis", c.gerVisiveis)) return false;
+    else if (alertarNegativo("gerações visíveis", c.gerVisiveis)) return false;
     else return true;
 }
+
+
+
+
+//Adiciona texto no arquivo
+function addNoArquivo(texto) { c.arquivo += texto; }
 //Adiciona os campos no arquivo
-function adicionarCamposNoArquivo() {
-    adicionarNoArquivo(`MODELAGEM E OTIMIZADOR DE FUNÇÕES MATEMÁTICAS COM ALGORITMOS EVOLUTIVOS
+function addTextoInicialDoArquivo() {
+    addNoArquivo(`MODELAGEM E OTIMIZADOR DE FUNÇÕES MATEMÁTICAS COM ALGORITMOS EVOLUTIVOS
 Autor: Gustavo Vidigal Schulgin (gusvidigal)
 --------------------------------------------------
 
 
 FUNÇÃO UTILIZADA (nas variáveis p): {
-${getAtr("funcao")}
+${obterAtributoHTML("funcao")}
 }
 
 PARÂMETROS:
@@ -153,10 +162,7 @@ Limite máximo dos genes: ${c.genesLmax};
 --------------------------------------------------
 `);
 }
-//Adiciona texto no arquivo
-function adicionarNoArquivo(texto) {
-    c.arquivo += texto;
-}
+
 
 
 
@@ -167,25 +173,30 @@ function adicionarNoArquivo(texto) {
 
 //FUNÇÕES DE HTML
 //Obtém o valor de algum atributo
-function getAtr(id, atributo) {
+function obterAtributoHTML(id, atributo) {
     if (!atributo) return document.getElementById(id).value;
     return document.getElementById(id)[atributo];
 }
 //Seta o valor de algum atributo
-function setAtr(id, txt, atributo) {
+function setarAtributoHTML(id, txt, atributo) {
     if (!atributo) document.getElementById(id).value = txt;
     else document.getElementById(id)[atributo] = txt;
 }
+//Seta o valor de algum atributo
+function setarAtributoNasClassesHTML(classe, txt, atributo) {
+    for (const elemento of document.getElementsByClassName(classe)) {
+        if (!atributo) elemento.value = txt;
+        else elemento[atributo] = txt;
+    }
+}
 //Limpa o valor de atributos
-function delAtrs() {
-    for (let i = 0; i < arguments.length; i++) setAtr(arguments[i], "");
+function deletarAtributosHTML() {
+    for (let i = 0; i < arguments.length; i++) setarAtributoHTML(arguments[i], "");
 }
 //Inativa um input
-function inputOff(id) {
-    setAtr(id, "true", "disabled");
-}
+function desativarInputHTML(id) { setarAtributoHTML(id, "true", "disabled"); }
 //Mudança nos selects
-function atualizarSelect() {
+function atualizarSelectsHTML() {
     //Primeiramente, ativa todos
     document.querySelectorAll("input").forEach(elemento => {
         if (!elemento.classList.contains("disabled-input")) elemento.disabled = false;
@@ -201,25 +212,25 @@ function atualizarSelect() {
     }
     switch (_mut) {
         case "_mut_pad":
-            inputOff("$estagnacao");
-            inputOff("$incremento_da_mutacao_base");
-            inputOff("$teto_da_mutacao_base");
-            inputOff("$mutacoes_limite_minimo");
-            inputOff("$mutacoes_limite_maximo");
+            desativarInputHTML("$estagnacao");
+            desativarInputHTML("$incremento_da_mutacao_base");
+            desativarInputHTML("$teto_da_mutacao_base");
+            desativarInputHTML("$mutacoes_limite_minimo");
+            desativarInputHTML("$mutacoes_limite_maximo");
             break;
         case "_mut_acu":
-            inputOff("$teto_da_mutacao_base");
-            inputOff("$mutacoes_limite_minimo");
-            inputOff("$mutacoes_limite_maximo");
+            desativarInputHTML("$teto_da_mutacao_base");
+            desativarInputHTML("$mutacoes_limite_minimo");
+            desativarInputHTML("$mutacoes_limite_maximo");
             break;
         case "_mut_acl":
-            inputOff("$mutacoes_limite_minimo");
-            inputOff("$mutacoes_limite_maximo");
+            desativarInputHTML("$mutacoes_limite_minimo");
+            desativarInputHTML("$mutacoes_limite_maximo");
             break;
         case "_mut_cao":
-            inputOff("$mutacao_base");
-            inputOff("$estagnacao");
-            inputOff("$incremento_da_mutacao_base");
+            desativarInputHTML("$mutacao_base");
+            desativarInputHTML("$estagnacao");
+            desativarInputHTML("$incremento_da_mutacao_base");
             break;
     }
 }
@@ -233,19 +244,19 @@ function atualizarSelect() {
 
 //FUNÇÕES DE ALEATORIEDADE
 //Retorna 1 se um número foi escolhido segundo a probabilidade
-function zeroUm(prob) {
+function escolherZeroUm(prob) {
     let num = Math.random();
-    if (num === prob) return zeroUm(prob);
+    if (num === prob) return escolherZeroUm(prob);
     return num < prob ? 1 : 0;
 }
 //Retorna um número aleatório entre dois valores (inclusos)
-function randNum(min, max, arredondar) {
+function escolherNumReal(min, max, arredondar) {
     let valor = min + Math.random() * (max - min);
     if (arredondar) return Math.round(valor);
     else return valor;
 }
 //Escolhe um index de uma lista de probabilidades
-function randIndex(probabilidades) {
+function escolherIndiceDeProbabilidades(probabilidades) {
     let num = Math.random();
     let escolhido, soma = 0;
     for (let i = 0; i < probabilidades.length; i++) {
@@ -258,8 +269,8 @@ function randIndex(probabilidades) {
     return escolhido;
 }
 //Escolhe um index aleatório de uma lista
-function randEl(lista) {
-    let index = randNum(0, lista.length, true);
+function escolherindiceDeLista(lista) {
+    let index = escolherNumReal(0, lista.length, true);
     return index;
 }
 
@@ -274,7 +285,7 @@ function randEl(lista) {
 
 //OUTRAS FUNÇÕES
 //Copia uma lista e a retorna (sem alterar a original)
-function copiar(lista) {
+function copiarLista(lista) {
     return lista.slice(0);
 }
 //Gera polinômios
@@ -285,13 +296,13 @@ function poli(x, coeficientes) {
     }
     return soma;
 }
-//Loga uma linha no campo de logs
-function log(txt) {
-    document.getElementById("logs").value += txt + '\n';
-    setAtr("logs", getAtr("logs", "scrollHeight"), "scrollTop");
+//Loga uma linha no campo de melhores indivíduos
+function addLinhaEmMelhoresIndividuos(txt) {
+    document.getElementById("melhores").value += txt + '\n';
+    setarAtributoHTML("melhores", obterAtributoHTML("melhores", "scrollHeight"), "scrollTop");
 }
 //Formata uma string para uma lista e a retorna
-function formatarLista(txt, tamanho, replacer) {
+function stringParaLista(txt, tamanho, replacer) {
     lista = txt.split(";").map(item => {
         if (item.trim() === "") return replacer;
         else {
@@ -308,16 +319,16 @@ function formatarLista(txt, tamanho, replacer) {
     return lista;
 }
 // Formata lista de valores para padronizar, proporcionalmente, em valores que somam 1
-function formatarProb(txt_ou_lista, tamanho, eh_lista) {
-    lista = eh_lista ? copiar(txt_ou_lista) : formatarLista(txt_ou_lista, tamanho, 0);
+function formatarParaProbabilidades(txt_ou_lista, tamanho, eh_lista) {
+    lista = eh_lista ? copiarLista(txt_ou_lista) : stringParaLista(txt_ou_lista, tamanho, 0);
     let soma = 0;
     for (let i = 0; i < lista.length; i++) soma += lista[i];
     lista = lista.map(item => soma === 0 ? 1 / tamanho : item / soma);
     return lista;
 }
 // Formata lista de limites
-function formatarLimites(txt, tamanho, tipo) {
-    lista = formatarLista(txt, tamanho, null);
+function formatarParaLimites(txt, tamanho, tipo) {
+    lista = stringParaLista(txt, tamanho, null);
 
     for (let i = 0; i < tamanho; i++) {
         if (tipo === 1) {
@@ -351,13 +362,13 @@ function formatarLimites(txt, tamanho, tipo) {
 
 //FUNÇÕES DE GRÁFICOS DO CANVAS.JS
 //Atualiza os gráficos
-function gAtualizar() {
+function atualizarGraficos() {
     for (let i = 0; i < arguments.length; i++) {
         arguments[i].g.render();
     }
 }
 //Reseta os gráficos
-function gResetar() {
+function resetarGraficos() {
     g_melhor.p.length = 0;
     g_margemDeErro.p.length = 0;
     g_funcao.pf.length = 0;
@@ -369,30 +380,10 @@ function gResetar() {
 
     g_melhor.r = c.resize;
     g_margemDeErro.r = c.resize;
-    gAtualizar(g_melhor, g_margemDeErro, g_funcao);
-}
-//Plotar o gráfico da função
-function gPlotarFuncao() {
-    //Se a função tem mais de uma variável, não vai plotar
-    if (c.nGenes > 1) return;
-    //Intervalo de plotagem
-    let min = c.genesLminGer[0];
-    let max = c.genesLmaxGer[0];
-    let maiorFuncao = min;
-    //Adiciona os pontos
-    for (let i = min; i <= max; i += (max - min) / c.nPtsFuncao) {
-        if (c.f([maiorFuncao]) < c.f([i])) maiorFuncao = i;
-        //Se o ponto não for escape
-        if (c.f([i]) !== c.escape) addPonto(g_funcao.pf, criarPonto(0, i, c.f([i])));
-    }
-    //Adiciona a marcação do melhor encontrado
-    g_funcao.g.axisX[0].stripLines[0].set("value", maiorFuncao);
-    addPonto(g_funcao.pi, criarPonto(3, maiorFuncao, c.f([maiorFuncao])));
-    //Atualiza
-    gAtualizar(g_funcao);
+    atualizarGraficos(g_melhor, g_margemDeErro, g_funcao);
 }
 //Cria um ponto
-function criarPonto(id) {
+function criarPontoNoGrafico(id) {
     let index;
     let x;
     let y;
@@ -423,13 +414,6 @@ function criarPonto(id) {
             y = arguments[2]
             break;
         case 4:
-            markerColor = "red";
-            x = arguments[1];
-            y = arguments[2];
-            break;
-        case 5:
-            markerColor = "blue";
-            markerSize = 4;
             x = arguments[1];
             y = arguments[2];
             index = arguments[3];
@@ -446,8 +430,28 @@ function criarPonto(id) {
     }
 
 }
+//Plotar o gráfico da função
+function plotarFuncao() {
+    //Se a função tem mais de uma variável, não vai plotar
+    if (c.nGenes > 1) return;
+    //Intervalo de plotagem
+    let min = c.genesLminGer[0];
+    let max = c.genesLmaxGer[0];
+    let maiorFuncao = min;
+    //Adiciona os pontos
+    for (let i = min; i <= max; i += (max - min) / c.nPtsFuncao) {
+        if (c.f([maiorFuncao]) < c.f([i])) maiorFuncao = i;
+        //Se o ponto não for escape
+        if (c.f([i]) !== c.escape) addPontoAoGrafico(g_funcao.pf, criarPontoNoGrafico(0, i, c.f([i])));
+    }
+    //Adiciona a marcação do melhor encontrado
+    g_funcao.g.axisX[0].stripLines[0].set("value", maiorFuncao);
+    addPontoAoGrafico(g_funcao.pi, criarPontoNoGrafico(3, maiorFuncao, c.f([maiorFuncao])));
+    //Atualiza
+    atualizarGraficos(g_funcao);
+}
 //Adiciona ponto ao gráfico e redimensiona
-function addPonto(obj, ponto) {
+function addPontoAoGrafico(obj, ponto) {
     //Se o objeto for um gráfico, adiciona e redimensiona. Senão, só adiciona
     if (obj.p) {
         obj.p.push(ponto);
@@ -455,13 +459,13 @@ function addPonto(obj, ponto) {
     } else obj.push(ponto);
 }
 //Adiciona o novo melhor (ponto vermelho) no gráfico da função
-function gAddNovoMelhor(indv) {
-    log(`GER: ${c.geracaoAtual.toString().padStart(5, 0)}, Novo valor máximo: g: [${indv.join(", ")}], f(g): ${c.f(indv)}`);
+function addNovoMelhorNaFuncao(indv) {
+    addLinhaEmMelhoresIndividuos(`GER: ${c.geracaoAtual.toString().padStart(5, 0)}, Novo valor máximo: g: [${indv.join(", ")}], f(g): ${c.f(indv)}`);
 
     //Se o indivíduo tiver mais de um gene, não plota
     if (indv.length > 1) return;
 
-    addPonto(g_funcao.pi, criarPonto(4, indv[0], c.f(indv)));
+    addPontoAoGrafico(g_funcao.pi, criarPontoNoGrafico(0, indv[0], c.f(indv)));
     //Se encontrou um novo melhor do que o valor que já estava marcado (em amarelo)
     if (c.f(indv) > c.f([g_funcao.g.axisX[0].stripLines[0].value])) {
         g_funcao.g.axisX[0].stripLines[0].set("value", indv[0]);
@@ -473,35 +477,35 @@ function gAddNovoMelhor(indv) {
             }
         }
     }
-    gAtualizar(g_funcao);
+    atualizarGraficos(g_funcao);
 }
 //Adiciona todos os indivíduos no gráfico da função
-function gAddIndividuos(populacao) {
-    //Se o indivíduo tiver mais de um gene, não plota
-    if (populacao[0].length > 1) return;
+function addIndividuosNaFuncao(populacao) {
+    //Se o indivíduo tiver mais de um gene, ou se não vão ser mostrados indivíduos, não plota
+    if (populacao[0].length > 1 || c.gerVisiveis === 0) return;
     //Retira todos e adiciona os novos
     g_funcao.pm.sort((a, b) => a.index - b.index);
     for (let i = 0; i < populacao.length; i++) {
-        addPonto(g_funcao.pm, criarPonto(5, populacao[i][0], c.f(populacao[i]), c.index));
+        addPontoAoGrafico(g_funcao.pm, criarPontoNoGrafico(4, populacao[i][0], c.f(populacao[i]), c.index));
         c.index += 1;
     }
-    while (g_funcao.pm.length > 100) g_funcao.pm.shift();
+    while (g_funcao.pm.length > c.gerVisiveis * c.nIndv) g_funcao.pm.shift();
 
-    gAtualizar(g_funcao);
+    atualizarGraficos(g_funcao);
 }
 
 //Adiciona pontos da geração atual nos gráficos
-function gAddMelhorAtual(indv) {
+function addMelhorAtualNosGraficos(indv) {
     //Adiciona, incrementa o x e atualiza
-    addPonto(g_melhor, criarPonto(1, c.f(indv)));
+    addPontoAoGrafico(g_melhor, criarPontoNoGrafico(1, c.f(indv)));
     g_melhor.x++;
-    gAtualizar(g_melhor);
+    atualizarGraficos(g_melhor);
     //Se não tem comparação, não precisa atualizar
     if (isFinite(c.compMargem)) {
         //Adiciona, incrementa o x e atualiza
-        addPonto(g_margemDeErro, criarPonto(2, c.compMargem - c.f(indv)));
+        addPontoAoGrafico(g_margemDeErro, criarPontoNoGrafico(2, c.compMargem - c.f(indv)));
         g_margemDeErro.x++;
-        gAtualizar(g_margemDeErro);
+        atualizarGraficos(g_margemDeErro);
     }
 }
 
