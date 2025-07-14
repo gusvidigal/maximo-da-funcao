@@ -47,26 +47,26 @@ Para uma função com mais de uma variável, tratamos os valores `x0, x1, x2...`
 ## Funcionalidades Adicionais do Programa e Interface
 ### Catástrofes
 É possível executar um *genocídio* ao substituir `n` indivíduos de uma geração por novos, gerados aleatoriamente. A geração que passar por catástrofes não sofrerá cruzamentos nem mutações. Além disso, **o melhor indivíduo nunca será substituído**. O programa dispõe de 4 formas de catástrofe:
-    * A) Catástrofe do Mais Apto: Os `n` piores indivíduos serão substituídos.
-    * B) Catástrofe da Praga: Os `n` melhores indivíduos serão substituídos.
-    * C) Catástrofe Disruptiva: Os `n` indivíduos medianos serão substituídos.
-    * D) Catástrofe Estabilizadora: Os `n/2` piores e os `n/2` melhores serão substituídos.
+1. Catástrofe do Mais Apto: Os `n` piores indivíduos serão substituídos.
+2. Catástrofe da Praga: Os `n` melhores indivíduos serão substituídos.
+3. Catástrofe Disruptiva: Os `n` indivíduos medianos serão substituídos.
+4. Catástrofe Estabilizadora: Os `n/2` piores e os `n/2` melhores serão substituídos.
 
 ### Formas de Mutação
 Existem também 4 formas de mutação disponíveis no programa:
-    * A) Mutação Padrão: O gene a ser mutado será incrementado/decrementado em uma taxa fixa.
-    * B) Mutação Acumulativa: Se a população não evoluir após `n` gerações, então considera-se que a população *estagnou*. A cada estagnação, a taxa aumenta proporcionalmente.
-    * C) Mutação Acumulativa com Teto: Similar à acumulativa, porém se a mutação total ultrapassar um limite, a estagnação e a mutação são resetados.
-    * D) Caótica: A taxa é aleatória para cada mutação.
+1. Mutação Padrão: O gene a ser mutado será incrementado/decrementado em uma taxa fixa.
+2. Mutação Acumulativa: Se a população não evoluir após `n` gerações, então considera-se que a população *estagnou*. A cada estagnação, a taxa aumenta proporcionalmente.
+3. Mutação Acumulativa com Teto: Similar à acumulativa, porém se a mutação total ultrapassar um limite, a estagnação e a mutação são resetados.
+4. Caótica: A taxa é aleatória para cada mutação.
 
 ### Função
 A função fornecida do usuário é em `JavaScript`. Isso significa que ele pode utilizar *estruturas condicionais*, *laços de repetição* e *bibliotecas padrões* ao defini-la.
 
 ### Gráficos
 A interface plota três gráficos para facilitar a visualização do usuário:
-    * A) Função: O programa plota a função que o usuário definiu juntamente com seu valor máximo. Ao longo das gerações, o programa também mostra no gráfico os melhores indivíduos encontrados. Adicionalmente, é possível mostrar todos os indivíduos das últimas gerações. **Esse gráfico só é visível em funções de uma variável**.
-    * B) Melhor Indivíduo: Esse gráfico mostra a evolução do melhor indivíduo com o passar das gerações.
-    * C) Margem de Erro: Para fins pedagógicos, é possível definir um valor máximo para o programa comparar com os melhores indivíduos. Dessa forma, pode-se plotar a distância que os melhores estão do valor máximo.
+1. Função: O programa plota a função que o usuário definiu juntamente com seu valor máximo. Ao longo das gerações, o programa também mostra no gráfico os melhores indivíduos encontrados. Adicionalmente, é possível mostrar todos os indivíduos das últimas gerações. **Esse gráfico só é visível em funções de uma variável**.
+2. Melhor Indivíduo: Esse gráfico mostra a evolução do melhor indivíduo com o passar das gerações.
+3. Margem de Erro: Para fins pedagógicos, é possível definir um valor máximo para o programa comparar com os melhores indivíduos. Dessa forma, pode-se plotar a distância que os melhores estão do valor máximo.
 
 ### Arquivo de Logs
 O usuário consegue fazer um download de um arquivo de logs (`.txt`), que contém os parâmetros da função, a função, todos os indivíduos de todas as gerações e valores de cruzamento e de mutação.
