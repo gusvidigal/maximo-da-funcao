@@ -8,7 +8,7 @@ Para acessar a interface e fazer seus próprios testes, utilize o link abaixo (*
 - https://gusvidigal.github.io/maximo-da-funcao/
 
 Também é possível acessá-la localmente com o passo-a-passo:
-1. Na página principal do repositório (![github.com/gusvidigal/maximo-da-funcao](https://github.com/gusvidigal/maximo-da-funcao)), clique no botão verde "Code" e, em seguida, clique em "Download ZIP".
+1. Na página principal do repositório (https://github.com/gusvidigal/maximo-da-funcao), clique no botão verde "Code" e, em seguida, clique em "Download ZIP".
 2. Extraia o arquivo baixado utilizando, por exemplo, o WinRaR.
 3. Abra o arquivo `index.html`, presente na pasta extraída no passo anterior, com um navegador de sua preferência (suporte garantido para Google Chrome, Safari, Firefox, Edge e Opera).
 
@@ -177,6 +177,7 @@ function selecaoPorElitismo(populacao) {
 Na seleção por roleta, cria-se uma roleta a partir dos indivíduos da população, de forma que indivíduos melhores possuem *mais espaço* na roleta. A roleta é feita utilizando a seguinte normalização, a fim de evitar probabilidades negativas:
 1. Se `c.f(populacao[i])` (pior indivíduo) for negativo ou nulo, então todos os `c.f(populacao[x])` são aumentados em `-c.f(populacao[i])+1`. Caso contrário, então todos os indivíduos são positivos. Ao final dessa etapa, é formado um vetor contendo todos os valores `c.f()`, que são positivos não nulos.
 2. A lista é proporcionalmente ajustada para que todos os seus elementos sejam menores do que 1.
+
 **EXEMPLO DE NORMALIZAÇÃO:**
 1. `[-3, 0, 5] -> [-3+(-(-3)+1), 0+(-(-3)+1), 5+(-(-3)+1)] -> [-3+4, 0+4, 5+4] -> [1, 4, 9]`
 2. `[1, 4, 9] -> [1/14, 4/14, 9/14] -> [0,071; 0,286; 0,643]`, onde `14 = 1 + 4 + 9`.
