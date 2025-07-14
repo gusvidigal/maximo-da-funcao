@@ -45,7 +45,7 @@ Ao clicar em `Iniciar`, o programa coletará todos os parâmetros fornecidos e i
         * [SELEÇÃO POR ELITISMO](#seleção-por-elitismo)
         * [SELEÇÃO POR ROLETA](#seleção-por-roleta)
         * [SELEÇÃO POR TORNEIO](#seleção-por-torneio)
-        * [MUTAÇÃO](#mutação)
+      - [MUTAÇÃO](#mutação)
   * [Considerações Finais](#considerações-finais)
 
 ## Implementação dos Algoritmos Evolutivos
@@ -200,7 +200,7 @@ function selecaoPorElitismo(populacao) {
 }
 ```
 
-#### SELEÇÃO POR ROLETA
+##### SELEÇÃO POR ROLETA
 Na seleção por roleta, cria-se uma roleta a partir dos indivíduos da população, de forma que indivíduos melhores possuem *mais espaço* na roleta. A roleta é feita utilizando a seguinte normalização, a fim de evitar probabilidades negativas:
 1. Se `c.f(populacao[i])` (pior indivíduo) for negativo ou nulo, então todos os `c.f(populacao[x])` são aumentados em `-c.f(populacao[i])+1`. Caso contrário, então todos os indivíduos são positivos. Ao final dessa etapa, é formado um vetor contendo todos os valores `c.f()`, que são positivos não nulos.
 2. A lista é proporcionalmente ajustada para que todos os seus elementos sejam menores do que 1.
@@ -243,7 +243,7 @@ function selecaoPorRoleta(populacao) {
     return populacaoNova;
 }
 ```
-#### SELEÇÃO POR TORNEIO
+##### SELEÇÃO POR TORNEIO
 Na seleção por torneio, serão sorteados dois pares de indivíduos da geração. O melhor do primeiro par cruzará (por média de genes) com o melhor do segundo par em um total de `c.nIndv-1` vezes (desconsiderando o melhor) e gerará um indivíduo, que será devidamente mutado.
 
 O melhor indivíduo da população (`populacao[I]`) está automaticamente incluso na nova população.
