@@ -18,8 +18,35 @@ Também é possível acessá-la localmente com o passo-a-passo:
 Insira os parâmetros desejados nos campos da interface. Todos os números com casas decimais **DEVEM** usar o símbolo `.` como separador (e não `,`). Alguns campos podem ser deixados em branco, mas essas e outras especificações, como exemplos e mais detalhes, podem ser encontradas ao passar o mouse por cima dos nomes dos parâmetros (em sublinhado).
 
 Caso algum valor esteja mal-formatado ou não possua sentido (como probabilidades negativas ou população igual a 0), o site enviará um `prompt` na tela alertando-o sobre isso.
-
 **OBSERVAÇÃO:** Mesmo que seu navegador bloqueie esses prompts/alertas, **o programa não será executado até que os devidos campos sejam alterados**.
+
+Ao clicar em `Iniciar`, o programa coletará todos os parâmetros fornecidos e iniciará a execução das gerações, com o *delay* fornecido. **NENHUM parâmetro alterado durante a execução a afetará**. É possível pausar a execução clicando no botão `pausar`. Enquanto ela estiver pausada, é possível executar apenas uma geração por vez a cada clique no botão `Executar 1 geração`. Para reiniciar a execução, basta clicar em `Iniciar` novamente. Note que se algum parâmetro tiver sido mudado, a próxima execução será afetada.
+
+## Conteúdo
+- [Máximo da Função](#máximo-da-função)
+  * [Implementação dos Algoritmos Evolutivos](#implementação-dos-algoritmos-evolutivos)
+    + [Introdução](#introdução)
+    + [Implementação no Código com Funções Matemáticas de uma variável X](#implementação-no-código-com-funções-matemáticas-de-uma-variável-x)
+    + [Implementação no Código com Funções Matemáticas de mais de uma variável.](#implementação-no-código-com-funções-matemáticas-de-mais-de-uma-variável)
+  * [Funcionalidades Adicionais do Programa e Interface](#funcionalidades-adicionais-do-programa-e-interface)
+    + [Catástrofes](#catástrofes)
+    + [Formas de Mutação](#formas-de-mutação)
+    + [Função](#função)
+    + [Gráficos](#gráficos)
+    + [Arquivo de Logs](#arquivo-de-logs)
+  * [Funcionamento e Especificações](#funcionamento-e-especificações)
+    + [GERAÇÃO DA POPULAÇÃO INICIAL](#geração-da-população-inicial)
+    + [ETAPAS EM LOOP](#etapas-em-loop)
+      - [DETERMINAÇÃO DO MELHOR INDIVÍDUO](#determinação-do-melhor-indivíduo)
+      - [AUMENTO DA ESTAGNAÇÃO](#aumento-da-estagnação)
+      - [CATÁSTROFE](#catástrofe)
+      - [LIMITE DA ESTAGNAÇÃO](#limite-da-estagnação)
+      - [SELEÇÃO](#seleção)
+        * [SELEÇÃO POR ELITISMO](#seleção-por-elitismo)
+        * [SELEÇÃO POR ROLETA](#seleção-por-roleta)
+        * [SELEÇÃO POR TORNEIO](#seleção-por-torneio)
+        * [MUTAÇÃO](#mutação)
+  * [Considerações Finais](#considerações-finais)
 
 ## Implementação dos Algoritmos Evolutivos
 ### Introdução
@@ -77,7 +104,7 @@ O usuário consegue fazer um download de um arquivo de logs (`.txt`), que conté
 ## Funcionamento e Especificações
 A seguir, estão o funcionamento detalhado e as especificações de cada parte do algoritmo evolutivo implementado.
 ### GERAÇÃO DA POPULAÇÃO INICIAL
-Gera-se `c.nIndv` vetores de `c.nGenes` genes. O valor de cada gene `Gi` é um **inteiro** número entre `c.genesLminGer[i]` e `c.genesLmaxGer[i]`. Todos os indivíduos (vetores) serão armazenados no vetor `c.pop`.
+Geram-se `c.nIndv` vetores de `c.nGenes` genes. O valor de cada gene `Gi` é um **inteiro** entre `c.genesLminGer[i]` e `c.genesLmaxGer[i]`. Todos os indivíduos (vetores) serão armazenados no vetor `c.pop`.
 ```javascript
 function gerarIndividuo() {
     let individuo = [];
@@ -85,11 +112,11 @@ function gerarIndividuo() {
     return individuo;
 }
 ```
-### ETAPAS EM LOOP:
+### ETAPAS EM LOOP
 #### DETERMINAÇÃO DO MELHOR INDIVÍDUO
 Itera-se sobre todos os indivíduos de `c.pop` e determina-se o **índice `I`** de maior aptidão, isto é, `c.f(c.pop[I])` é o maior dentre os `c.f(c.pop[i])`.
 
-#### AUMENTO ESTAGNAÇÃO [Ver também: MUTAÇÃO]
+#### AUMENTO DA ESTAGNAÇÃO
 `c.estagAtual` conta quantas vezes consecutivas as gerações estão estagnadas. Isto é, se há 15 gerações o melhor (`c.melhorGeral`) é o mesmo, `c.estagAtual = 15`. Esse valor só aumenta se o tipo de mutação escolhido (`c._mut`) for a acumulativa (`_mut_acu`) ou a acumulativa limitada (`_mut_acl`).
 
 Porém, caso a geração atual encontre um novo melhor, então o incremento atual da mutação (`c.incAtual`) é resetado, juntamente com a contagem das estagnações.
@@ -157,7 +184,7 @@ function alterarIncrementoDaMutacaoAtual(resetar) {
     c.estagAtual = 0;
 }
 ```
-#### SELEÇÃO [Ver também: MUTAÇÃO]
+#### SELEÇÃO
 Nessa etapa, os indivíduos serão substituídos
 ##### SELEÇÃO POR ELITISMO
 Na seleção por elitismo, todos os indivíduos (**menos o melhor (`populacao[I]`)**) são cruzados com o melhor, fazendo a média entre os genes de `populacao[i]` e `populacao[I]`. Após isso, é realizada a mutação e os indivíduos são substituídos.
