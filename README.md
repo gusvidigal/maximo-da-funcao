@@ -16,6 +16,7 @@ Também é possível acessá-la localmente com o passo-a-passo:
 **Acesse preferencialmente pelo computador**.
 
 Insira os parâmetros desejados nos campos da interface. Todos os números com casas decimais **DEVEM** usar o símbolo `.` como separador (e não `,`). Alguns campos podem ser deixados em branco, mas essas e outras especificações, como exemplos e mais detalhes, podem ser encontradas ao passar o mouse por cima dos nomes dos parâmetros (em sublinhado).
+
 Caso algum valor esteja mal-formatado ou não possua sentido (como probabilidades negativas ou população igual a 0), o site enviará um `prompt` na tela alertando-o sobre isso.
 
 **OBSERVAÇÃO:** Mesmo que seu navegador bloqueie esses prompts/alertas, **o programa não será executado até que os devidos campos sejam alterados**.
@@ -90,6 +91,7 @@ Itera-se sobre todos os indivíduos de `c.pop` e determina-se o **índice `I`** 
 
 #### AUMENTO ESTAGNAÇÃO [Ver também: MUTAÇÃO]
 `c.estagAtual` conta quantas vezes consecutivas as gerações estão estagnadas. Isto é, se há 15 gerações o melhor (`c.melhorGeral`) é o mesmo, `c.estagAtual = 15`. Esse valor só aumenta se o tipo de mutação escolhido (`c._mut`) for a acumulativa (`_mut_acu`) ou a acumulativa limitada (`_mut_acl`).
+
 Porém, caso a geração atual encontre um novo melhor, então o incremento atual da mutação (`c.incAtual`) é resetado, juntamente com a contagem das estagnações.
 ```javascript
 if (c.f(c.pop[I]) === c.f(c.melhorGeral) && ["_mut_acu", "_mut_acl"].includes(c._mut)) {
@@ -178,6 +180,7 @@ Na seleção por roleta, cria-se uma roleta a partir dos indivíduos da populaç
 **EXEMPLO DE NORMALIZAÇÃO:**
 1. `[-3, 0, 5] -> [-3+(-(-3)+1), 0+(-(-3)+1), 5+(-(-3)+1)] -> [-3+4, 0+4, 5+4] -> [1, 4, 9]`
 2. `[1, 4, 9] -> [1/14, 4/14, 9/14] -> [0,071; 0,286; 0,643]`, onde `14 = 1 + 4 + 9`.
+
 Após isso, escolhem-se dois indivíduos aleatoriamente da população. Esses indivíduos cruzarão (por média de genes) e gerarão `c.nIndv-3` indivíduos (desconsiderando o melhor e esses dois indivíduos, **já que eles estarão automaticamente na geração**), que serão devidamente mutados.
 
 ```javascript
@@ -214,6 +217,7 @@ function selecaoPorRoleta(populacao) {
 ```
 #### SELEÇÃO POR TORNEIO
 Na seleção por torneio, serão sorteados dois pares de indivíduos da geração. O melhor do primeiro par cruzará (por média de genes) com o melhor do segundo par em um total de `c.nIndv-1` vezes (desconsiderando o melhor) e gerará um indivíduo, que será devidamente mutado.
+
 O melhor indivíduo da população (`populacao[I]`) está automaticamente incluso na nova população.
 
 ```javascript
@@ -266,8 +270,11 @@ function realizarMutacao(tipo, individuo) {
 }
 ```
 Após isso, a mutação acontece com base no tipo `tipo = c._mut` selecionado. O `sinal` é escolhido com base na probabilidade dele ser positivo (`c.pMutPos`). Os valores `c.mutBase`, `c.incMutBase` e `c.incAtual` são a mutação base, o incremento da mutação base e o fator multiplicativo desse incremento, isto é, quantas vezes a população *estagnou* (isso significa que, na primeira estagnação, o incremento é dobrado; na segunda, ele é triplicado; etc.).
+
 No caso da mutação acumulativa limitada, o teto reseta esse fator multiplicativo e a contagem da estagnação, ou seja, a mutação nessa geração passa a ser `c.mutBase * sinal`.
+
 Já na mutação caótica, cada gene `Gi` que será mutado é escolhido entre `c.mutLmin[i]` e `c.mutLmax[i]`, onde `c.mutLmin` e `c.mutLmax` são vetores de tamanho `c.nGenes` indicando tais limites.
+
 Adicionalmente, para todas as mutações, caso o gene `Gi` seja menor que `c.genesLmin[i]` ou maior que `c.genesLmax[i]`, ele será igual ao limite respectivo, onde `c.genesLminn` e `c.genesLmax` são vetores de tamanho `c.nGenes` indicando tais limites.
 ```javascript
 function mutacaoPorAleatoriedade(tipo, individuo, genesParaMutar) {
@@ -307,4 +314,4 @@ function mutacaoPorAleatoriedade(tipo, individuo, genesParaMutar) {
 ```
 
 ## Considerações Finais
-O projeto foi idealizado a partir de conceitos apresentados nas aulas de Inteligência Artificial Bioinspirada, ministradas pelo Prof. Dr. Eduardo do Valle Simões. Mais informações sobre esse material podem ser encontradas na pasta da disciplina de `Sistemas Evolutivos Aplicados a Robótica`, ![aqui](https://gitlab.com/simoesusp/disciplinas/-/tree/master/SSC0713-Sistemas-Evolutivos-Aplicados-a-Robotica?ref_type=heads).
+O projeto foi idealizado a partir de conceitos apresentados nas aulas de Inteligência Artificial Bioinspirada, ministradas pelo Prof. Dr. Eduardo do Valle Simões. Mais informações sobre esse material podem ser encontradas na pasta da disciplina de `Sistemas Evolutivos Aplicados a Robótica`: https://gitlab.com/simoesusp/disciplinas/-/tree/master/SSC0713-Sistemas-Evolutivos-Aplicados-a-Robotica?ref_type=heads.
