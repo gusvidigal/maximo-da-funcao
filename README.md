@@ -22,6 +22,10 @@ Caso algum valor esteja mal-formatado ou não possua sentido (como probabilidade
 
 Ao clicar em `Iniciar`, o programa coletará todos os parâmetros fornecidos e iniciará a execução das gerações, com o *delay* fornecido. **NENHUM parâmetro alterado durante a execução a afetará**. É possível pausar a execução clicando no botão `pausar`. Enquanto ela estiver pausada, é possível executar apenas uma geração por vez a cada clique no botão `Executar 1 geração`. Para reiniciar a execução, basta clicar em `Iniciar` novamente. Note que se algum parâmetro tiver sido mudado, a próxima execução será afetada.
 
+Para dar *zoom* nos gráficos, clique em qualquer ponto do gráfico e, segurando, arraste o mouse horizontalmente até selecionar o intervalo desejado. Após isso, o gráfico mostrará um zoom da área selecionada e dois botões aparecerão no canto superior direito:
+- Clicando no botão da esquerda (*setinhas*), você consegue mover o gráfico ao longo do eixo X, mas não conseguirá dar zoom. O botão será substituído por uma *lupa* que, ao ser clicada, habilita o zoom novamente.
+- Clicando no botão da direita (*voltar*), o gráfico volta ao estado original.
+
 ## Conteúdo
 - [Máximo da Função](#máximo-da-função)
   * [Implementação dos Algoritmos Evolutivos](#implementação-dos-algoritmos-evolutivos)
