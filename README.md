@@ -1,5 +1,6 @@
 # Máximo da Função
 Email de contato: gustavo .vidigal@ usp. br
+Avaliação do projeto: https://forms.gle/ehjwLvzUwPWKCt8N6
 
 ## Descrição do Projeto
 O "Máximo da Função" é a implementação de um algoritmo evolutivo com o objetivo de encontrar o ponto máximo de uma função. A função (em código `JavaScript`) e os parâmetros utilizados no algoritmo são visíveis e editáveis pelo usuário por meio de uma interface construída em HTML.
